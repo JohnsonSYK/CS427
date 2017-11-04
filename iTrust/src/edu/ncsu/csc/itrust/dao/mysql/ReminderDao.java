@@ -62,4 +62,28 @@ public class ReminderDao {
             DBUtil.closeConnection(conn,pstring);
         }
     }
+
+    public ReminderBean getReminderById(long apptId) throws SQLException, DBException{
+        Connection conn=null;
+        PreparedStatement pstring= null;
+
+        try{
+            conn = factory.getConnection();
+
+            pstring = conn.prepareStatement("SELECT * FROM reminders WHERE id = ?");
+            pstring.setLong(1, apptId);
+            final ResultSet results = pstring.executeQuery();
+            final List<ReminderBean> rbList = this.rbl.loadList(results);
+            if(rbList.size() == 0) {
+                return null;
+            } else {
+                return rbList.get(0);
+            }
+        }catch (SQLException e){
+            throw new DBException(e);
+        }finally {
+            DBUtil.closeConnection(conn,pstring);
+        }
+    }
+
 }
