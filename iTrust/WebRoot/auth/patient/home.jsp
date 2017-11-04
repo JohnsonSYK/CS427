@@ -56,3 +56,5 @@ loggingAction.logEvent(TransactionType.HOME_VIEW, loggedInMID.longValue(), 0, ""
 </div>
 
 <%@include file="/footer.jsp" %>
+
+
