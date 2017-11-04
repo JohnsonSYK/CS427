@@ -40,7 +40,10 @@ public class HealthRecordsBeanLoader implements BeanLoader<HealthRecord> {
 		ps.setInt(i++, bean.getCholesterolLDL());
 		ps.setInt(i++, bean.getCholesterolTri());
 		ps.setLong(i++, bean.getPersonnelID());
-		ps.setDate(i++, new java.sql.Date(bean.getVisitDate().getTime()));
+		if (bean.getVisitDateStr().equals("0000-00-00"))
+			ps.setString(i++, bean.getVisitDateStr());
+		else
+			ps.setDate(i++, new java.sql.Date(bean.getVisitDate().getTime()));
 		ps.setDouble(i++, bean.getBodyMassIndex());
 		
 		return ps;

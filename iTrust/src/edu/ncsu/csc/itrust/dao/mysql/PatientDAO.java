@@ -212,12 +212,13 @@ public class PatientDAO {
 			patientLoader.loadParameters(ps, p);
 			ps.setLong(37, p.getMID());
 			ps.executeUpdate();
-			
-			addHistory(p.getMID(), hcpid);
+
+			if (hcpid != -1)
+				addHistory(p.getMID(), hcpid);
 			ps.close();
 			
 		} catch (SQLException e) {
-			
+			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -235,7 +236,7 @@ public class PatientDAO {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
-			
+			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -338,6 +339,28 @@ public class PatientDAO {
 			return loadlist;
 		} catch (SQLException e) {
 			
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+	}
+
+	public boolean validPatientEmail(String email) throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT COUNT(*) FROM patients WHERE email=?");
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			int count = rs.getInt(1);
+			System.out.println(count);
+			boolean valid = count == 0;
+			rs.close();
+			ps.close();
+			return valid;
+		} catch (SQLException e) {
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -686,7 +709,7 @@ public class PatientDAO {
 	/**
 	 * Removes all dependencies participated by the patient passed in the parameter
 	 * 
-	 * @param representerMID the mid for the patient to remove all representees for
+	 * @param representeeMID the mid for the patient to remove all representees for
 	 * @throws DBException
 	 */
 	public void removeAllRepresentee(long representeeMID) throws DBException {
