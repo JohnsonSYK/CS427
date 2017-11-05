@@ -27,9 +27,9 @@
     <input type="number" name="startingYear" min="1900" max = "2020" />
     <input type="number" name="endingYear" min="1900" max = "2020"/>
     <select name="gender">
+        <option value="all">all</option>
         <option value="male">male</option>
         <option value="female">female</option>
-        <option value="all">all</option>
     </select>
     <input type="submit" name="fSubmit" value="View Data">
 </form>
