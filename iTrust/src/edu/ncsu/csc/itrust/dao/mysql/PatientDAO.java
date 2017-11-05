@@ -355,7 +355,6 @@ public class PatientDAO {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			int count = rs.getInt(1);
-			System.out.println(count);
 			boolean valid = count == 0;
 			rs.close();
 			ps.close();

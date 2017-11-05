@@ -9,6 +9,11 @@
 <%@ page import="edu.ncsu.csc.itrust.beans.PatientBean" %>
 <%@ page import="edu.ncsu.csc.itrust.beans.HealthRecord" %>
 <%@ page import="edu.ncsu.csc.itrust.enums.Role" %>
+<%@ page import="edu.ncsu.csc.itrust.exception.FormValidationException" %>
+<%@ page import="edu.ncsu.csc.itrust.validate.PatientValidator" %>
+<%@ page import="edu.ncsu.csc.itrust.exception.ErrorList" %>
+<%@ page import="edu.ncsu.csc.itrust.validate.HealthRecordFormValidator" %>
+<%@ page import="edu.ncsu.csc.itrust.beans.forms.HealthRecordForm" %>
 
 <%@include file="/global.jsp" %>
 
@@ -45,92 +50,82 @@
     String weight = request.getParameter("p_weight");
     String smoker = request.getParameter("p_smoker");
 
-    if (firstName != null && "".equals(firstName)) {
-        String msg = "Please enter your first name";
-%>
-<div style="align: center; margin-bottom: 10px;">
-    <span class="iTrustError" style="font-size: 16px;"><%= StringEscapeUtils.escapeHtml("" + (msg)) %></span>
-</div>
-<%
-    } else if (lastName != null && "".equals(lastName)) {
-        String msg = "Please enter your last name";
-%>
-<div style="align: center; margin-bottom: 10px;">
-    <span class="iTrustError" style="font-size: 16px;"><%= StringEscapeUtils.escapeHtml("" + (msg)) %></span>
-</div>
-<%
-    } else if (email != null && !prodDAO.getPatientDAO().validPatientEmail(email)) {
-        String msg = "This email is already being used";
-%>
-<div style="align: center; margin-bottom: 10px;">
-    <span class="iTrustError" style="font-size: 16px;"><%= StringEscapeUtils.escapeHtml("" + (msg)) %></span>
-</div>
-<%
-    } else if (email != null && "".equals(email)) {
-        String msg = "Please enter an email address";
-%>
-<div style="align: center; margin-bottom: 10px;">
-    <span class="iTrustError" style="font-size: 16px;"><%= StringEscapeUtils.escapeHtml("" + (msg)) %></span>
-</div>
-<%
-    } else if (password != null && pwVerify != null && ("".equals(password) || "".equals(pwVerify))) {
-        String msg = "Please enter a password and confirm it";
-%>
-<div style="align: center; margin-bottom: 10px;">
-    <span class="iTrustError" style="font-size: 16px;"><%= StringEscapeUtils.escapeHtml("" + (msg)) %></span>
-</div>
-<%
-    } else if (password != null && pwVerify != null && !password.equals(pwVerify)) {
-        String msg = "Password and verification don't match";
-%>
-<div style="align: center; margin-bottom: 10px;">
-    <span class="iTrustError" style="font-size: 16px;"><%= StringEscapeUtils.escapeHtml("" + (msg)) %></span>
-</div>
-<%
-    } else if (firstName != null && lastName != null && email != null && password != null && pwVerify != null) {
-        long patientMID = prodDAO.getPatientDAO().addEmptyPatient();
-        PatientBean patientBean = new PatientBean();
-        patientBean.setMID(patientMID);
-        patientBean.setFirstName(firstName);
-        patientBean.setLastName(lastName);
-        patientBean.setEmail(email);
-        patientBean.setPassword(password);
+    if (firstName != null && lastName != null && email != null && password != null && pwVerify != null) {
+        try {
+            ErrorList errorList = new ErrorList();
 
-        patientBean.setStreetAddress1(addr1);
-        patientBean.setStreetAddress2(addr2);
-        patientBean.setCity(city);
-        if (!state.equals(""))
-            patientBean.setState(state);
-        patientBean.setZip(zipcode);
-        patientBean.setPhone(phone);
+            PatientBean patientBean = new PatientBean();
+            patientBean.setFirstName(firstName);
+            patientBean.setLastName(lastName);
+            patientBean.setEmail(email);
+            patientBean.setPassword(password);
 
-        patientBean.setIcAddress1(icAddr1);
-        patientBean.setIcAddress2(icAddr2);
-        patientBean.setIcCity(icCity);
-        if (!icState.equals(""))
-            patientBean.setIcState(icState);
-        patientBean.setIcZip(icZipcode);
-        patientBean.setIcPhone(icPhone);
+            patientBean.setStreetAddress1(addr1);
+            patientBean.setStreetAddress2(addr2);
+            patientBean.setCity(city);
+            if (!state.equals(""))
+                patientBean.setState(state);
+            patientBean.setZip(zipcode);
+            patientBean.setPhone(phone);
 
-        HealthRecord healthRecord = new HealthRecord();
-        if ("".equals(height)) height = "0";
-        if ("".equals(weight)) weight = "0";
-        healthRecord.setHeight(Double.parseDouble(height));
-        healthRecord.setWeight(Double.parseDouble(weight));
-        healthRecord.setPatientID(patientMID);
-        if (smoker == null) smoker = "off";
-        healthRecord.setSmoker(smoker.compareTo("off"));
+            patientBean.setIcAddress1(icAddr1);
+            patientBean.setIcAddress2(icAddr2);
+            patientBean.setIcCity(icCity);
+            if (!icState.equals(""))
+                patientBean.setIcState(icState);
+            patientBean.setIcZip(icZipcode);
+            patientBean.setIcPhone(icPhone);
 
-        prodDAO.getPatientDAO().editPatient(patientBean, -1);
-        prodDAO.getHealthRecordsDAO().add(healthRecord);
-        prodDAO.getAuthDAO().addUser(patientMID, Role.PATIENT, password);
+            // use the existing validator to validate input for patient information
+            new PatientValidator().validate(patientBean);
 
+            // if successful form validation, check the for pre-existing email and matching password inputs
+            // and throw exceptions for errors
+            if (!prodDAO.getPatientDAO().validPatientEmail(email)) {
+                errorList.addIfNotNull(email + " is already being used by another patient");
+            }
+            if ("".equals(password) && "".equals(pwVerify)) {
+                errorList.addIfNotNull("Please enter a password and confirm it");
+            }
+            if (!password.equals(pwVerify)) {
+                errorList.addIfNotNull("Password and verification don't match");
+            }
+            if (errorList.getMessageList().size() > 0)
+                throw new FormValidationException(errorList);
+
+            // all validations passed, assign new patient an MID
+            long patientMID = prodDAO.getPatientDAO().addEmptyPatient();
+            patientBean.setMID(patientMID);
+
+            /*HealthRecordForm healthRecordForm = new HealthRecordForm();
+            if (!"".equals(height)) healthRecordForm.setHeight(height);
+            if (!"".equals(weight)) healthRecordForm.setWeight(weight);
+
+            new HealthRecordFormValidator().validate(healthRecordForm);
+            healthRecordForm.setPatientID(patientMID);
+            if (smoker == null) smoker = "off";
+            healthRecord.setSmoker(smoker.compareTo("off"));*/
+
+
+            prodDAO.getPatientDAO().editPatient(patientBean, -1);
+            //prodDAO.getHealthRecordsDAO().add(healthRecord);
+            prodDAO.getAuthDAO().addUser(patientMID, Role.PATIENT, password);
 %>
-<div><%= StringEscapeUtils.escapeHtml("Your MID is " + patientMID) %></div>
+<h3><%= StringEscapeUtils.escapeHtml("Pre-registration successful! Your MID is " + patientMID) %></h3>
 <%
+        } catch (FormValidationException e) {
+            for (String error : e.getErrorList()) {
+%>
+<div align="center">
+    <span class="iTrustError"><%= StringEscapeUtils.escapeHtml(error) %></span>
+</div>
+<%
+            }
+        }
     }
-    // show form
+
 %>
+
 <form method="post" action="/iTrust/preRegisterForm.jsp">
     First Name<br />
     <input type="text" id="p_fname" name="p_fname" style="width: 97%;"><br />
