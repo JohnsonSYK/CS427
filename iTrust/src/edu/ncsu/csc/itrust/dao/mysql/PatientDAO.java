@@ -367,6 +367,25 @@ public class PatientDAO {
 		}
 	}
 
+	public boolean isPreRegistered(final long mid) throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT * FROM patients WHERE preRegister=TRUE AND MID=?");
+			ps.setLong(1, mid);
+			final ResultSet rs = ps.executeQuery();
+			final boolean check = rs.next();
+			rs.close();
+			ps.close();
+			return check;
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+	}
+
 	/**
 	 * Declares an HCP for a particular patient
 	 * 

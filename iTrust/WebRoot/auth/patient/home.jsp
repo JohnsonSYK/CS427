@@ -50,9 +50,20 @@ loggingAction.logEvent(TransactionType.HOME_VIEW, loggedInMID.longValue(), 0, ""
 <span class="iTrustMessage"><%=StringEscapeUtils.escapeHtml("" + ("Adverse Event Successfully Reported"))%></span>
 <%
 	}
+
+	if(prodDAO.getPatientDAO().isPreRegistered(loggedInMID)) {
+%>
+<div style="text-align: center; height: 300px;">
+	<h2>Welcome <%= StringEscapeUtils.escapeHtml("" + (userName )) %>! As a pre-registered patient you will need a HCP to activate your account in order to use iTrust </h2>
+</div>
+<%
+	} else {
 %>
 <%@include file="/auth/patient/notificationArea.jsp" %>
 <%@include file="/auth/patient/activityFeed.jsp" %>
-</div>
+<%
+	}
+%>
+
 
 <%@include file="/footer.jsp" %>
