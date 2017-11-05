@@ -24,13 +24,13 @@
 
 <form action="viewCauseDeath.jsp" method="post">
     <input type="hidden" name="confirmAction" value="true"/>
-    <input type="number" name="startingYear" min="1900" max = "2020" />
-    <input type="number" name="endingYear" min="1900" max = "2020"/>
-    <select name="gender">
+    Left Interval year <input type="text" name="startingYear"/><br>
+    Right Interval year <input type="text" name="endingYear"/> <br>
+    Gender <select name="gender">
         <option value="all">all</option>
         <option value="male">male</option>
         <option value="female">female</option>
-    </select>
+    </select> <br>
     <input type="submit" name="fSubmit" value="View Data">
 </form>
 
@@ -41,20 +41,26 @@
         String gender = request.getParameter("gender");
         int startingYear = Integer.parseInt(param);
         int endingYear = Integer.parseInt(param2);
-
-        ViewCauseDeathAction CDA = new ViewCauseDeathAction(prodDAO);
-        String output = CDA.getCODStatisticsMID(loggedInMID, startingYear, endingYear, gender);
-        if (output == "")
-            output = "Wow, no one died, good job Doc!";
+        if (endingYear > 2050 || startingYear < 1900 || startingYear > endingYear){
+            %>
+Illegal date filter
+<%
+        }
+        else{
+            ViewCauseDeathAction CDA = new ViewCauseDeathAction(prodDAO);
+            String output = CDA.getCODStatisticsMID(loggedInMID, startingYear, endingYear, gender);
+            if (output == "")
+                output = "Wow, no one died, good job Doc!";
 %>
 Cause of death statistics for your patients: <br><%=output%><br>
 <%
-        output = CDA.getCODStatisticsAll(startingYear, endingYear, gender);
-        if (output == "")
-            output = "No deaths in a whole hospital? Close the morgue, we're on a streak!";
-        %>
+            output = CDA.getCODStatisticsAll(startingYear, endingYear, gender);
+            if (output == "")
+                output = "No deaths in a whole hospital? Close the morgue, we're on a streak!";
+%>
 Cause of death statistics across all patients: <br><%=output%>
-        <%
+<%
+        }
     }
 
 
