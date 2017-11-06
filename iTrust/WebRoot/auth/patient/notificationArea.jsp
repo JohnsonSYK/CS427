@@ -58,7 +58,10 @@ BillingDAO bills = prodDAO.getBillingDAO();
     HospitalBean hospital = wardDAO.getHospitalByPatientID(loggedInMID.longValue());
     %>
     <ul style="list-style-type: none;">
-    
+
+		<li>
+			<a href="/iTrust/auth/patient/notifications.jsp">Notifications</a>
+		</li>
 <% if(messageAction.getUnreadCount() == 0) { %>
 	<li>
 	   <img class="icon" src="/iTrust/image/icons/inboxEmpty.png" style="border:0px;">
