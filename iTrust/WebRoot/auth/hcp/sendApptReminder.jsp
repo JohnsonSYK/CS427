@@ -4,6 +4,8 @@
 <%@page import="edu.ncsu.csc.itrust.beans.ApptRequestBean"%>
 <%@page import="java.util.List"%>
 <%@page import="edu.ncsu.csc.itrust.action.ViewApptRequestsAction"%>
+<%@ page import="edu.ncsu.csc.itrust.beans.PersonnelBean" %>
+<%@ page import="edu.ncsu.csc.itrust.dao.mysql.PersonnelDAO" %>
 <%@page errorPage="/auth/exceptionHandler.jsp"%>
 
 <%@include file="/global.jsp"%>
@@ -22,7 +24,9 @@
 
 
 <h1>Send Appointment Reminder</h1>
-
+<%PersonnelBean self = new PersonnelDAO(prodDAO).getPersonnel(loggedInMID);
+String names=self.getFullName();
+%>
 <script type="text/javascript">
 $(document).ready(function() {
     $('#submitDays').click(function() {
@@ -40,7 +44,8 @@ $(document).ready(function() {
             url : "/iTrust/auth/AppointmentDayServlet",
             data : {
                 days : num,
-                mid: <%= loggedInMID %>
+                mid: <%= loggedInMID %>,
+				name : '<%= names %>'
             },
             success : function(e){
                 $('#daysDiv').addClass('hidden');

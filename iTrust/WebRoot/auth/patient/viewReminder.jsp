@@ -48,11 +48,11 @@
             } else {
                 %>
                 <table>
-                    <tr><td>To</td> <td><%=userName%></td></tr>
-                    <tr><td>From</td> <td><%=bean.getSenderName()%></td></tr>
-                    <tr><td>Timestamp</td> <td><%=bean.getSentTime().toString()%></td></tr>
-                    <tr><td>Subject</td> <td><%=bean.getSubject()%></td></tr>
-                    <tr><td>Content</td> <td><%=bean.getContent()%></td></tr>
+                    <tr><td><b>To</b></td> <td><%=userName%></td></tr>
+                    <tr><td><b>From</b></td> <td><%=bean.getSenderName()%></td></tr>
+                    <tr><td><b>Timestamp</b></td> <td><%=bean.getSentTime().toString()%></td></tr>
+                    <tr><td><b>Subject</b></td> <td><%=bean.getSubject()%></td></tr>
+                    <tr><td><b>Content</b></td> <td><%=bean.getContent()%></td></tr>
                 </table>
                 <%
             }

@@ -48,10 +48,10 @@
             for(ReminderBean bean : reminderBeans){
                 %>
                 <tr>
-                <td><%= bean.getSubject() %></td>
-                <td><%= userName %></td>
-                <td><%= bean.getSentTime().toString() %></td>
-                <td><a href="/iTrust/auth/patient/viewReminder.jsp?apptId=<%= bean.getReminderId()%>">Link</a></td>
+                    <td><%= bean.getSubject() %></td>
+                    <td><%= userName %></td>
+                    <td><%= bean.getSentTime().toString() %></td>
+                    <td><a href="/iTrust/auth/patient/viewReminder.jsp?apptId=<%= bean.getReminderId()%>">Link</a></td>
                 </tr>
                         <%
             }
