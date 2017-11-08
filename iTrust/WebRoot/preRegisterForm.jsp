@@ -96,6 +96,7 @@
             // all validations passed, assign new patient an MID
             long patientMID = prodDAO.getPatientDAO().addEmptyPatient();
             patientBean.setMID(patientMID);
+            patientBean.setPreRegister(true);
 
             /*HealthRecordForm healthRecordForm = new HealthRecordForm();
             if (!"".equals(height)) healthRecordForm.setHeight(height);

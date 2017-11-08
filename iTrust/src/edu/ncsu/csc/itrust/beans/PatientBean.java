@@ -61,6 +61,7 @@ public class PatientBean implements Serializable, Comparable<PatientBean> {
 	private String spiritualPractices = "";
 	private String alternateName = "";
 	private String dateOfDeactivationStr = "";
+	private boolean preRegister = false;
 
 
 	public BloodType getBloodType() {
@@ -483,6 +484,12 @@ public class PatientBean implements Serializable, Comparable<PatientBean> {
 
 	public void setDateOfDeactivationStr(String dateOfDeactivationStr) {
 		this.dateOfDeactivationStr = dateOfDeactivationStr;
+	}
+
+	public boolean getPreRegister() { return preRegister; }
+
+	public void setPreRegister(boolean p) {
+		this.preRegister = p;
 	}
 
 	public int compareTo(PatientBean o) {

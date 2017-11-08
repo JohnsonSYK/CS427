@@ -207,10 +207,10 @@ public class PatientDAO {
 					+ "DateOfDeath=?,CauseOfDeath=?,MotherMID=?,FatherMID=?,"
 					+ "BloodType=?,Ethnicity=?,Gender=?,TopicalNotes=?, CreditCardType=?, CreditCardNumber=?, "
 					+ "DirectionsToHome=?, Religion=?, Language=?, SpiritualPractices=?, "
-					+ "AlternateName=?, DateOfDeactivation=? WHERE MID=?");
+					+ "AlternateName=?, DateOfDeactivation=?, preRegister=? WHERE MID=?");
 
 			patientLoader.loadParameters(ps, p);
-			ps.setLong(37, p.getMID());
+			ps.setLong(38, p.getMID());
 			ps.executeUpdate();
 
 			if (hcpid != -1)
