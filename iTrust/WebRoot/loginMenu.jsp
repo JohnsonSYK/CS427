@@ -41,7 +41,7 @@ function fillLoginFields(u,p) {
 	<input type="submit" value="Login">
 		
 	<br /><br />
-	<a style="font-size: 80%;" href="/iTrust/util/resetPassword.jsp">Reset Password</a>
+	<a style="font-size: 80%;" href="/iTrust/util/resetPassword.jsp">Reset Password</a> | <a style="font-size: 80%;" href="/iTrust/preRegisterForm.jsp">Pre-Register</a>
 
 	</form>
 <%

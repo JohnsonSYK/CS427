@@ -113,7 +113,7 @@
 						if (validSession) {
 							if ((loggedInMID != null) && (loggedInMID.longValue() != 0L)) //someone is logged in
 							{
-								if (userRole.equals("patient")) {
+								if (userRole.equals("patient") && !prodDAO.getPatientDAO().isPreRegistered(loggedInMID)) {
 					%><%@include file="/auth/patient/menu.jsp"%>
 					<%
 						} else if (userRole.equals("uap")) {

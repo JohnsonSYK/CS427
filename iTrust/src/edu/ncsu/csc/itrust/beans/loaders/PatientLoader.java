@@ -188,6 +188,7 @@ public class PatientLoader implements BeanLoader<PatientBean> {
 			}
 		}
 		ps.setDate(i++, date);
+		ps.setBoolean(i++, p.getPreRegister());
 		return ps;
 	}
 }

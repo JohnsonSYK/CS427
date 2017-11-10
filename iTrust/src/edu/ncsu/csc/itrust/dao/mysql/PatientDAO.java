@@ -207,17 +207,18 @@ public class PatientDAO {
 					+ "DateOfDeath=?,CauseOfDeath=?,MotherMID=?,FatherMID=?,"
 					+ "BloodType=?,Ethnicity=?,Gender=?,TopicalNotes=?, CreditCardType=?, CreditCardNumber=?, "
 					+ "DirectionsToHome=?, Religion=?, Language=?, SpiritualPractices=?, "
-					+ "AlternateName=?, DateOfDeactivation=? WHERE MID=?");
+					+ "AlternateName=?, DateOfDeactivation=?, preRegister=? WHERE MID=?");
 
 			patientLoader.loadParameters(ps, p);
-			ps.setLong(37, p.getMID());
+			ps.setLong(38, p.getMID());
 			ps.executeUpdate();
-			
-			addHistory(p.getMID(), hcpid);
+
+			if (hcpid != -1)
+				addHistory(p.getMID(), hcpid);
 			ps.close();
 			
 		} catch (SQLException e) {
-			
+			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -235,7 +236,7 @@ public class PatientDAO {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
-			
+			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -338,6 +339,46 @@ public class PatientDAO {
 			return loadlist;
 		} catch (SQLException e) {
 			
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+	}
+
+	public boolean validPatientEmail(String email) throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT COUNT(*) FROM patients WHERE email=?");
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			int count = rs.getInt(1);
+			boolean valid = count == 0;
+			rs.close();
+			ps.close();
+			return valid;
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+	}
+
+	public boolean isPreRegistered(final long mid) throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT * FROM patients WHERE preRegister=TRUE AND MID=?");
+			ps.setLong(1, mid);
+			final ResultSet rs = ps.executeQuery();
+			final boolean check = rs.next();
+			rs.close();
+			ps.close();
+			return check;
+		} catch (SQLException e) {
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -686,7 +727,7 @@ public class PatientDAO {
 	/**
 	 * Removes all dependencies participated by the patient passed in the parameter
 	 * 
-	 * @param representerMID the mid for the patient to remove all representees for
+	 * @param representeeMID the mid for the patient to remove all representees for
 	 * @throws DBException
 	 */
 	public void removeAllRepresentee(long representeeMID) throws DBException {
