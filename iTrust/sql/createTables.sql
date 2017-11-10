@@ -798,3 +798,12 @@ CREATE TABLE IF NOT EXISTS opdiagnosis(
 	ICDCode DECIMAL( 5, 2 ) NOT NULL COMMENT 'Code for the Diagnosis',
     URL VARCHAR(512) COMMENT 'URL for information'
 ) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS reminders (
+  ID INT(10) auto_increment primary key,
+    mid BIGINT(20) UNSIGNED NOT NULL,
+    subject VARCHAR(255) NOT NULL COMMENT 'Subject of the reminder',
+    sender_name VARCHAR(255) NOT NULL COMMENT 'Who sent',
+    sent_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    content VARCHAR(2048) NOT NULL COMMENT 'Content of message'
+) ENGINE=MYISAM;

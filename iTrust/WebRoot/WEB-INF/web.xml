@@ -353,7 +353,19 @@
 	<servlet-mapping>
 		<servlet-name>PatientSearchServlet</servlet-name>
 		<url-pattern>/auth/PatientSearchServlet</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
+
+	<servlet>
+		<description>
+		</description>
+		<display-name>AppointmentDayServlet</display-name>
+		<servlet-name>AppointmentDayServlet</servlet-name>
+		<servlet-class>edu.ncsu.csc.itrust.server.AppointmentDayServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AppointmentDayServlet</servlet-name>
+		<url-pattern>/auth/AppointmentDayServlet</url-pattern>
+	</servlet-mapping>
 	
     <servlet>
 		<description>

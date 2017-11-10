@@ -36,6 +36,7 @@
 			<li><a href="/iTrust/auth/hcp/scheduleAppt.jsp">Schedule Appointment</a>
 			<li><a href="/iTrust/auth/hcp/viewMyAppts.jsp">View My Appointments</a>
 			<li><a href="/iTrust/auth/hcp/viewMyApptRequests.jsp">Appointment Requests</a>
+			<li><a href="/iTrust/auth/hcp/sendApptReminder.jsp">Send Appointment Reminders</a>
 		    <li><a href="/iTrust/auth/hcp/calendar.jsp">Appointment Calendar</a>
 		</ul>
 	</div>
@@ -152,6 +153,7 @@
 		    <li><a href="/iTrust/auth/staff/editPersonnel.jsp">UAPs</a>
 			<li><a href="/iTrust/auth/surveyResults.jsp">Satisfaction Survey Results</a>
 			<li><a href="/iTrust/auth/hcp/viewPrescriptionRenewalNeeds.jsp">Potential Prescription-Renewals</a>
+			<li><a href="/iTrust/auth/hcp/viewCauseDeath.jsp">View cause-of-death trends report</a>
 		</ul>
 	</div>
 </div>
