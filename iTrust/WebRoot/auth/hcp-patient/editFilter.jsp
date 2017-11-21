@@ -19,7 +19,6 @@
     EditFilterAction efa = new EditFilterAction(prodDAO, loggedInMID);
     FilterBean cur = efa.pullCurrent();
     Boolean isNull = (cur.getMid()==-1L);
-    System.out.println("1");
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 %>
 <%@include file="/header.jsp" %>
@@ -77,7 +76,6 @@
 </form>
 
 <%
-    System.out.println("2");
     if (request.getParameter("fSubmit") != null){
         Boolean allGood = true;
         String sender = request.getParameter("sender");
@@ -125,7 +123,7 @@
                 %> Success! <%
             }
             else{
-                %> Error! Try again. <%
+                %> Error while adding a filter! Try again. <%
             }
         }
         else if (allGood){
@@ -134,7 +132,7 @@
                 %> Success <%
             }
             else{
-                %> Error! Try again. <%
+                %> Error while updating the filter! Try again. <%
             }
         }
         else {

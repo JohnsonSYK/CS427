@@ -54,6 +54,7 @@ public class EditFilterAction {
             return true;
         }
         catch (Exception e){
+            e.printStackTrace();
             return false;
         }
     }

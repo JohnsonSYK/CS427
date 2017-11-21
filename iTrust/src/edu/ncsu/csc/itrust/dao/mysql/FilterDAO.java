@@ -68,8 +68,18 @@ public class FilterDAO {
         ps.setString(3, f.getSubject());
         ps.setString(4, f.getSubstring_pos());
         ps.setString(5, f.getSubstring_neg());
-        ps.setDate(6, new java.sql.Date(f.getDate_left().getTime()));
-        ps.setDate(7, new java.sql.Date(f.getDate_right().getTime()));
+        if (f.getDate_left() != null){
+            ps.setDate(6, new java.sql.Date(f.getDate_left().getTime()));
+        }
+        else{
+            ps.setNull(6, Types.DATE);
+        }
+        if (f.getDate_right() != null){
+            ps.setDate(7, new java.sql.Date(f.getDate_right().getTime()));
+        }
+        else{
+            ps.setNull(7, Types.DATE);
+        }
     }
 
     /**
