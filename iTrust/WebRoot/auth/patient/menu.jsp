@@ -80,6 +80,7 @@
 			<li><a href="/iTrust/auth/patient/sendMessage.jsp">Compose a Message</a>
 			<li><a href="/iTrust/auth/hcp-patient/messageInbox.jsp">Message Inbox</a>
 			<li><a href="/iTrust/auth/hcp-patient/messageOutbox.jsp">Message Outbox</a>
+			<li><a href="/iTrust/auth/hcp-patient/editFilter.jsp">Edit Message Filter</a>
 		</ul>
 	</div>
 </div>
