@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS globalvariables;
 DROP TABLE IF EXISTS hcpassignedhos;
 DROP TABLE IF EXISTS hcprelations;
 DROP TABLE IF EXISTS referralmessage;
+DROP TABLE IF EXISTS filters;
 
 DROP TABLE IF EXISTS labprocedure;
 DROP TABLE IF EXISTS loginfailures;
