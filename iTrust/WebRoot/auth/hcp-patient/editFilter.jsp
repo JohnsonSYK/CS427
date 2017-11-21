@@ -140,6 +140,7 @@
         else {
 %> Error! Try again. <%
             }
+        response.sendRedirect("editFilter.jsp");
     }
 %>
 <%@include file="/footer.jsp" %>
