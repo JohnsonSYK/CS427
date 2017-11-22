@@ -47,6 +47,7 @@ public class AppointmentDayServlet extends HttpServlet {
         String param = request.getParameter("days");
         Integer days = Integer.parseInt(param);
         Long mid = Long.parseLong(request.getParameter("mid"));
+        String names=request.getParameter("name");
         List<ApptBean> res = null;
         try {
             res = factory.getApptDAO().getApptsFor(mid);
@@ -69,10 +70,10 @@ public class AppointmentDayServlet extends HttpServlet {
             rb.setMid((int)(bean.getPatient()));
             rb.setSenderName(senderName);
             rb.setSubject(String.format("Reminder: upcoming appointment in %d day(s)", dayDiff));
-            rb.setContent(String.format("You have an appointment on %s, %s with Dr. %d",
+            rb.setContent(String.format("You have an appointment on %s, %s with Dr. %s",
                     hmsFormatter.format(apptTime),
                     dmyFormatter.format(apptTime),
-                    mid));
+                    names));
             try {
                 reminderDao.logReminder(rb);
                 EventLoggingAction loggingAction = new EventLoggingAction(this.factory);
