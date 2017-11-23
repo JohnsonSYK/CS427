@@ -21,7 +21,7 @@ public class FilterBean {
     private Date Date_right;
 
     public FilterBean() {
-        mid = -1L;
+        mid = null;
         Sender = null;
         Subject = null;
         Substring_pos = null;

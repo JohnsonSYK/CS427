@@ -93,7 +93,7 @@ CREATE TABLE patients(
 ) ENGINE=MyISAM;
 
 CREATE TABLE filters (
-  mid INT PRIMARY KEY,
+  mid BIGINT(20) UNSIGNED PRIMARY KEY,
   sender varchar(255),
   subject varchar(255),
   sub_pos varchar(255),

@@ -12,17 +12,20 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.ParseException" %>
+<%@ page import="edu.ncsu.csc.itrust.dao.mysql.PersonnelDAO" %>
+<%@ page import="edu.ncsu.csc.itrust.dao.mysql.PatientDAO" %>
 
 <%@include file="/global.jsp" %>
+
 <%
     pageTitle = "iTrust - Edit Filter";
     EditFilterAction efa = new EditFilterAction(prodDAO, loggedInMID);
     FilterBean cur = efa.pullCurrent();
-    Boolean isNull = (cur.getMid()==-1L);
+    Boolean isNull = (cur == null);
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 %>
 <%@include file="/header.jsp" %>
-<form action="editFilter.jsp" method="post" onsubmit="setTimeout(function (){window.location.reload();}, 100)">
+<form action="editFilter.jsp" method="post" name="FilterForm">
     Sender/Receiver: <input type="text" name="sender"
         <%
             if (!isNull  && cur.getSender() != null && !cur.getSender().equals("")){
@@ -71,11 +74,15 @@
     }
 
 %>/> <br>
-    <input type="submit" name="cSubmit" value="Cancel" onClick="window.location.reload();"> <br>
-    <input type="submit" name="fSubmit" value="Save Filter"> <br>
+    <input type="submit" name="cSubmit" value="Cancel">
+    <input type="submit" name="fSubmit" value="Save Filter">
+    <input type="submit" name="tSubmit" value="Test Search">
 </form>
 
 <%
+    if (request.getParameter("cSubmit") != null){
+        response.sendRedirect("editFilter.jsp");
+    }
     if (request.getParameter("fSubmit") != null){
         Boolean allGood = true;
         String sender = request.getParameter("sender");
@@ -121,6 +128,7 @@
             Boolean success = efa.addFilter(sender, subject, sub_pos, sub_neg, date_left, date_right);
             if (success){
                 %> Success! <%
+                response.sendRedirect("editFilter.jsp");
             }
             else{
                 %> Error while adding a filter! Try again. <%
@@ -130,6 +138,7 @@
             Boolean success = efa.updateFilter(sender, subject, sub_pos, sub_neg, date_left, date_right);
             if (success){
                 %> Success <%
+            response.sendRedirect("editFilter.jsp");
             }
             else{
                 %> Error while updating the filter! Try again. <%
@@ -138,7 +147,169 @@
         else {
 %> Error! Try again. <%
             }
-        response.sendRedirect("editFilter.jsp");
+    }
+    else if (request.getParameter("tSubmit") != null){
+        Boolean allGood = true;
+
+                String sender = request.getParameter("sender");
+                if (sender.equals(""))
+                    sender = null;
+                String subject = request.getParameter("subject");
+                if (subject.equals(""))
+                    subject = null;
+                String sub_pos = request.getParameter("sub_pos");
+                if (sub_pos.equals(""))
+                    sub_pos = null;
+                String sub_neg = request.getParameter("sub_neg");
+                if (sub_neg.equals(""))
+                    sub_neg = null;
+                String d_left = request.getParameter("date_left");
+                Date date_left = null;
+                if (!d_left.equals("")){
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    sdf.setLenient(false);
+                    try {
+                        date_left = df.parse(d_left);
+                    } catch (ParseException e) {
+                        allGood = false;
+%> Error! First date format should be "yyyy-mm-dd" <br><%
+                    }
+                }
+
+                String d_right = request.getParameter("date_right");
+                Date date_right = null;
+                if (!d_right.equals("")){
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    sdf.setLenient(false);
+                    try {
+                        date_right = df.parse(d_right);
+                    } catch (ParseException e) {
+                        allGood = false;
+%> Error! Second date format should be "yyyy-mm-dd" <br><%
+                    }
+
+                }
+
+                if (allGood){
+                    FilterBean testFilter = new FilterBean();
+                    testFilter.setMid(loggedInMID);
+                    testFilter.setSender(sender);
+                    testFilter.setSubject(subject);
+                    testFilter.setSubstring_pos(sub_pos);
+                    testFilter.setSubstring_neg(sub_neg);
+                    testFilter.setDate_left(date_left);
+                    testFilter.setDate_right(date_right);
+                    %>
+<script src="/iTrust/DataTables/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    jQuery.fn.dataTableExt.oSort['lname-asc']  = function(x,y) {
+        var a = x.split(" ");
+        var b = y.split(" ");
+        return ((a[1] < b[1]) ? -1 : ((a[1] > b[1]) ?  1 : 0));
+    };
+
+    jQuery.fn.dataTableExt.oSort['lname-desc']  = function(x,y) {
+        var a = x.split(" ");
+        var b = y.split(" ");
+        return ((a[1] < b[1]) ? 1 : ((a[1] > b[1]) ?  -1 : 0));
+    };
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#mailbox").dataTable( {
+            "aaColumns": [ [2,'dsc'] ],
+            "aoColumns": [ { "sType": "lname" }, null, null, {"bSortable": false} ],
+            "sPaginationType": "full_numbers"
+        });
+    });
+</script>
+<style type="text/css" title="currentStyle">
+    @import "/iTrust/DataTables/media/css/demo_table.css";
+</style>
+<%
+    PersonnelDAO personnelDAO = new PersonnelDAO(prodDAO);
+    PatientDAO patientDAO = new PatientDAO(prodDAO);
+
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+    ViewMyMessagesAction action = new ViewMyMessagesAction(prodDAO, loggedInMID.longValue());
+
+    List<MessageBean> messages = action.getAllMyMessages();
+    session.setAttribute("messages", messages);
+    FilterBean filter = testFilter;
+    AuthDAO aDAO = new AuthDAO(prodDAO);
+    if (filter.getMid() == -1L)
+        filter = null;
+    if(messages.size() > 0) { %>
+<table id="mailbox" class="display fTable">
+    <thead>
+    <tr>
+        <th><%= "Sender" %></th>
+        <th>Subject</th>
+        <th><%= "Received" %></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <%
+        int index=-1;
+        for(MessageBean message : messages) {
+            Boolean good = true;
+            Date msgDate = new Date(message.getSentDate().getTime());
+            if (filter != null && ((filter.getSender() != null && !aDAO.getUserName(message.getFrom()).equals(filter.getSender())) ||
+                    (filter.getSubject() != null && !message.getSubject().equals(filter.getSubject())) ||
+                    (filter.getSubstring_pos() != null && !message.getSubject().contains(filter.getSubstring_pos()) && !message.getBody().contains(filter.getSubstring_pos())) ||
+                    (filter.getSubstring_neg() != null && (message.getSubject().contains(filter.getSubstring_neg()) || message.getBody().contains(filter.getSubstring_neg()))) ||
+                    (filter.getDate_left() != null && msgDate.before(filter.getDate_left())) ||
+                    (filter.getDate_right() != null && msgDate.after(filter.getDate_right()))
+            )){
+                good = false;
+            }
+            index ++;
+            if (good){
+                String style = "";
+                if(message.getRead() == 0) {
+                    style = "style=\"font-weight: bold;\"";
+                }
+                String primaryName = action.getName(message.getFrom());
+                List<MessageBean> ccs = action.getCCdMessages(message.getMessageId());
+                String ccNames = "";
+                int ccCount = 0;
+                for(MessageBean cc:ccs){
+                    ccCount++;
+                    long ccMID = cc.getTo();
+                    ccNames += action.getPersonnelName(ccMID) + ", ";
+                }
+                ccNames = ccNames.length() > 0?ccNames.substring(0, ccNames.length()-2):ccNames;
+                String toString = primaryName;
+                if(ccCount>0){
+                    String ccNameParts[] = ccNames.split(",");
+                    toString = toString + " (CC'd: ";
+                    for(int i = 0; i < ccNameParts.length-1; i++) {
+                        toString += ccNameParts[i] + ", ";
+                    }
+                    toString += ccNameParts[ccNameParts.length - 1] + ")";
+                }
+    %>
+    <tr <%=style%>>
+        <td><%= StringEscapeUtils.escapeHtml("" + ( toString)) %></td>
+        <td><%= StringEscapeUtils.escapeHtml("" + ( message.getSubject() )) %></td>
+        <td><%= StringEscapeUtils.escapeHtml("" + ( dateFormat.format(message.getSentDate()) )) %></td>
+        <td><a href="<%= "viewMessageInbox.jsp?msg=" + StringEscapeUtils.escapeHtml("" + ( index )) %>">Read</a></td>
+    </tr>
+    <%
+                }
+            }
+        }
+    %>
+    </tbody>
+</table>
+<%      if (messages.size() == 0) { %>
+<div>
+    <i>You have no messages</i>
+</div>
+<%	    }
+        }
     }
 %>
 <%@include file="/footer.jsp" %>

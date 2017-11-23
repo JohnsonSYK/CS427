@@ -34,10 +34,7 @@ public class EditFilterAction {
     }
 
     public FilterBean pullCurrent() throws DBException{
-        FilterBean current = filterDAO.getFilter(Mid);
-        if (current != null)
-            return current;
-        return new FilterBean();
+        return filterDAO.getFilter(Mid);
     }
 
     public Boolean addFilter(String sender, String subject, String sub_pos, String sub_neg, Date d_left, Date d_right) throws DBException{

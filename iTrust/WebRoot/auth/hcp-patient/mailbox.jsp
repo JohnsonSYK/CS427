@@ -62,8 +62,6 @@ session.setAttribute("messages", messages);
 EditFilterAction efa = new EditFilterAction(prodDAO, loggedInMID);
 FilterBean filter = efa.pullCurrent();
 AuthDAO aDAO = new AuthDAO(prodDAO);
-if (filter.getMid() == -1L)
-    filter = null;
 if(messages.size() > 0) { %>
 
 <table id="mailbox" class="display fTable">
@@ -90,18 +88,7 @@ if(messages.size() > 0) { %>
 				(filter.getDate_right() != null && msgDate.after(filter.getDate_right()))
 				)){
 			good = false;
-				System.out.println(message.getSubject());
-				System.out.println(message.getBody());
-			    System.out.println("sender");
-			    System.out.println((outbox && filter.getSender() != null && !aDAO.getUserName(message.getTo()).equals(filter.getSender())) ||
-						(!outbox && filter.getSender() != null && !aDAO.getUserName(message.getFrom()).equals(filter.getSender())));
-			    System.out.println("subject");
-			    System.out.println(filter.getSubject() != null && !message.getSubject().equals(filter.getSubject()));
-			    System.out.println("pos");
-				System.out.println(filter.getSubstring_pos() != null && !message.getSubject().contains(filter.getSubstring_pos()) && !message.getBody().contains(filter.getSubstring_pos()));
-				System.out.println("neg");
-				System.out.println(filter.getSubstring_neg() != null && (message.getSubject().contains(filter.getSubstring_neg()) || message.getBody().contains(filter.getSubstring_neg())));
-			}
+				}
 		index ++;
 	    if (good){
 			String style = "";
