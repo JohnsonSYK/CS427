@@ -23,8 +23,8 @@ import java.util.List;
 
 public class AppointmentDayServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private final DAOFactory factory;
-    private final ReminderDao reminderDao;
+    private DAOFactory factory;
+    private ReminderDao reminderDao;
     private static final String senderName = "System Reminder";
     private static final DateFormat hmsFormatter = new SimpleDateFormat("HH:mm:ss");
     private static final DateFormat dmyFormatter = new SimpleDateFormat("yyyy/MM/dd");

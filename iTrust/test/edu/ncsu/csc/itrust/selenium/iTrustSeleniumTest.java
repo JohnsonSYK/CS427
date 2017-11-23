@@ -55,7 +55,7 @@ abstract public class iTrustSeleniumTest extends TestCase {
 	 * @return {@link WebConversation}
 	 * @throws Exception
 	 */
-	public WebDriver login(String username, String password) throws Exception {
+	public static WebDriver login(String username, String password) throws Exception {
 			// begin at the iTrust home page
 			WebDriver wd = new Driver();
 			

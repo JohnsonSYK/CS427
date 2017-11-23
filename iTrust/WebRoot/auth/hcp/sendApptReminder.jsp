@@ -60,7 +60,7 @@ $(document).ready(function() {
 });
 </script>
 
-<div style="border: 1px solid Gray; padding:5px;float:left;" id="daysDiv">
+<div id="daysDiv">
 	<h2>Enter number of days:</h2>
 	<input id="numDaysInput" style="width: 250px;" type="text" value="" />
 	<button style="..." id="submitDays">Submit</button>
