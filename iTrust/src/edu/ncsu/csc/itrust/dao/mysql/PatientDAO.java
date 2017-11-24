@@ -218,7 +218,6 @@ public class PatientDAO {
 			ps.close();
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -236,7 +235,6 @@ public class PatientDAO {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);

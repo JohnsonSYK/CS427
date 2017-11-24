@@ -7,6 +7,6 @@ import junit.framework.TestCase;
 public class PatientDAOTest extends TestCase {
 
     private ApptBean getTestApptBean() {
-        return null;
+        return null; // validPatientEmail isPreRegistered
     }
 }

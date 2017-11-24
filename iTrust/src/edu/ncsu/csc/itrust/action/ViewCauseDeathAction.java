@@ -38,6 +38,16 @@ public class ViewCauseDeathAction {
         this.ovDAO = factory.getOfficeVisitDAO();
     }
 
+    /**
+     * Returns a summary of cause of death statistics for mid between
+     * startingYear and endingYear inclusive -- with gender = gender
+     * @param MID, Medical ID
+     * @param startingYear, Valid starting year
+     * @param endingYear, valid ending year, startingYear <= endingyear
+     * @param gender, gender -- "male" "female" or "all"
+     * @return Summary as above
+     * @throws DBException if cannot connect to db
+     */
     public String getCODStatisticsMID(Long MID, int startingYear, int endingYear, String gender) throws DBException{
         List<OfficeVisitBean> officeVisits = this.ovDAO.getAllOfficeVisitsForLHCP(MID);
         List<Long> patients = new ArrayList<>();
@@ -58,6 +68,14 @@ public class ViewCauseDeathAction {
         return formatCauseOfDeaths(causeDeathList);
     }
 
+    /**
+     * View Cause of Death stats for all patients
+     * @param startingYear, Valid starting year
+     * @param endingYear, valid ending year, startingYear <= endingyear
+     * @param gender, gender -- "male" "female" or "all"
+     * @return Summary as above
+     * @throws DBException if cannot connect to db
+     */
     public String getCODStatisticsAll(int startingYear, int endingYear, String gender) throws DBException{
         List <PatientBean> all_patients = patientsDAO.getAllPatients();
         List<String> causeDeathList = new ArrayList<>();
@@ -72,6 +90,15 @@ public class ViewCauseDeathAction {
         return formatCauseOfDeaths(causeDeathList);
     }
 
+    /**
+     * Only adds a cause of death if in [startingYear,endingYear] and the
+     * Gender condition matches
+     * @param startingYear, valid starting year
+     * @param endingYear, valid ending year, startingYear <= endingYear
+     * @param gender, gender -- "male" "female" or "all"
+     * @param causeDeathList, list to add
+     * @param currentPatient, whom to consider
+     */
     private void filteredAdd(int startingYear, int endingYear, String gender, List<String> causeDeathList, PatientBean currentPatient) {
         String causeDeath = currentPatient.getCauseOfDeath();
         Gender currentGender = currentPatient.getGender();
@@ -88,6 +115,13 @@ public class ViewCauseDeathAction {
         }
     }
 
+    /**
+     * Creates a count for causes of deaths, sorts them in reverse by frequency
+     * Builds a string with all of these and outputs them
+     * @param causeDeathList, causes of death to consider
+     * @return Summary
+     * @throws DBException if not able to connect to db
+     */
     private String formatCauseOfDeaths(List<String> causeDeathList) throws DBException {
         Map<String, Long> counts = new HashMap<>();
         for (String causeDeath : causeDeathList) {
@@ -112,9 +146,9 @@ public class ViewCauseDeathAction {
             output.append("ICD-9CM: ");
             output.append(freqCause.getValue());
             output.append("; Cause of Death: ");
-            output.append((icdDAO.getICDCode((String) freqCause.getValue())).getDescription());
+            output.append((icdDAO.getICDCode(freqCause.getValue())).getDescription());
             output.append("; Frequency:");
-            output.append(String.valueOf((Long) freqCause.getKey()));
+            output.append(String.valueOf(freqCause.getKey()));
             output.append("\n");
         }
         return output.toString();
