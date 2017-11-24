@@ -52,28 +52,27 @@ public class ApptDAO {
 	public List<ApptBean> getApptsFor(final long mid) throws SQLException, DBException {
 		Connection conn = null;
 		PreparedStatement pstring = null;
-		try{
-		conn = factory.getConnection();
-		if(mid >= MIN_MID){
-			pstring = conn.prepareStatement("SELECT * FROM appointment WHERE doctor_id=? AND sched_date > NOW() ORDER BY sched_date;");
+		try {
+			conn = factory.getConnection();
+			if (mid >= MIN_MID) {
+				pstring = conn.prepareStatement("SELECT * FROM appointment WHERE doctor_id=? AND sched_date > NOW() ORDER BY sched_date;");
+			} else {
+				pstring = conn.prepareStatement("SELECT * FROM appointment WHERE patient_id=? AND sched_date > NOW() ORDER BY sched_date;");
+			}
+
+			pstring.setLong(1, mid);
+
+			ResultSet results = pstring.executeQuery();
+			List<ApptBean> abList = this.abloader.loadList(results);
+			results.close();
+			pstring.close();
+			return abList;
+		} catch (SQLException e) {
+
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, pstring);
 		}
-		else {
-			pstring = conn.prepareStatement("SELECT * FROM appointment WHERE patient_id=? AND sched_date > NOW() ORDER BY sched_date;");
-		}
-		
-		pstring.setLong(1, mid);
-		
-		ResultSet results = pstring.executeQuery();
-		List<ApptBean> abList = this.abloader.loadList(results);
-		results.close();
-		pstring.close();
-		return abList;
-	} catch (SQLException e) {
-		
-		throw new DBException(e);
-	} finally {
-		DBUtil.closeConnection(conn, pstring);
-	}
 	}
 	
 	public List<ApptBean> getAllApptsFor(long mid) throws SQLException, DBException {
