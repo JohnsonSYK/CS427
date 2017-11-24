@@ -631,33 +631,8 @@ public class PatientDAO {
 				bean = patientLoader.loadSingle(rs);
 			rs.close();
 			ps.close();
-			if(bean.getMID() == representee)
-				return true;
-			return false;
-		} catch (SQLException e) {
-			
-			throw new DBException(e);
-		} finally {
-			DBUtil.closeConnection(conn, ps);
-		}
-	}
-	
-	public boolean checkIfPatientIsActive(long pid) throws ITrustException
-	{
-		Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			if (pid == 0L) throw new SQLException("pid cannot be 0");
-			conn = factory.getConnection();
-			ps = conn.prepareStatement("SELECT * FROM patients WHERE MID=? AND DateOfDeactivation IS NULL");
-			ps.setLong(1, pid);
-			ResultSet rs = ps.executeQuery();
-			PatientBean bean = new PatientBean();
-			if(rs.next())
-				bean = patientLoader.loadSingle(rs);
-			rs.close();
-			ps.close();
-			if(bean.getMID() == pid)
+			if(bean.getMID()
+					== representee)
 				return true;
 			return false;
 		} catch (SQLException e) {

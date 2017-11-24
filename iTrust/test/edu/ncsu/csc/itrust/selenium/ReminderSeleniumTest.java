@@ -11,8 +11,24 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Runs through UC41 flow
+ */
 public class ReminderSeleniumTest extends iTrustSeleniumTest {
 
+    /**
+     * The test
+     *  * Logs an appointment for patient #1 under mid #90000000000
+     *  * Logs in under mid
+     *  * Mid sends reminder
+     *  * Verifies success
+     *
+     *  * Logs in as patient #1
+     *  * clicks on the notification area
+     *  * Makes sure that there is exactly one notification
+     *  * Verify that you can click on the link
+     *  * Removes all appointments associated with patient #1
+     */
     @Test
     public void testSendNotificationTest() {
         try {
@@ -51,6 +67,13 @@ public class ReminderSeleniumTest extends iTrustSeleniumTest {
         }
     }
 
+    /**
+     * The test
+     *  * Logs in as patient #1
+     *  * clicks on the notification area
+     *  * Makes sure that there are no notifications
+     *  * Removes all appointments associated with patient #1
+     */
     @Test
     public void testNoNotifications() {
         try {
@@ -61,7 +84,7 @@ public class ReminderSeleniumTest extends iTrustSeleniumTest {
             assertTrue(driver.getTitle().equals("iTrust - Patient Home"));
             driver.findElementById("notification").click();
             List<WebElement> rows = driver.findElementsByCssSelector("#notificationTable tr");
-            assertTrue(rows.size() == 2);
+            assertTrue(rows.size() == 1);
 
             for(ApptBean bea: apptDAO.getAllConflictsForPatient(1)) {
                 apptDAO.removeAppt(bea);

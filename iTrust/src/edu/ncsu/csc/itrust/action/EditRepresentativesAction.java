@@ -112,7 +112,7 @@ public class EditRepresentativesAction extends PatientBaseAction {
 	public boolean checkIfPatientIsActive(long patientID) throws ITrustException
 	{
 		try {
-			return patientDAO.checkIfPatientIsActive(patientID);
+			return patientDAO.checkIfRepresenteeIsActive(patientID);
 		} catch (DBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

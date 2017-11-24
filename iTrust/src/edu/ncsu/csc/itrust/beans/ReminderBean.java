@@ -3,6 +3,9 @@ package edu.ncsu.csc.itrust.beans;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+/**
+ * Represents a reminder object
+ */
 public class ReminderBean implements Serializable {
 
     private static final long serialVersionUID = -1965874529780021183L;
@@ -12,7 +15,6 @@ public class ReminderBean implements Serializable {
     private String senderName;
     private Timestamp sentTime;
     private String content;
-
 
     public int getReminderId() {
         return reminderId;
@@ -65,7 +67,12 @@ public class ReminderBean implements Serializable {
     @Override
     public int hashCode () { return reminderId; }
 
-    @Override
+    /**
+     * Returns true if both objects represent the exact same
+     * entity in the database (including ids)
+     * @param other, another object
+     * @return true if equal false otherwise
+     */
     public boolean equals(Object other){
         if(! (other instanceof ReminderBean)) {
             return false;
