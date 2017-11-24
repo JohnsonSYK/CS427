@@ -4,6 +4,7 @@ import edu.ncsu.csc.itrust.action.EventLoggingAction;
 import edu.ncsu.csc.itrust.beans.ApptBean;
 import edu.ncsu.csc.itrust.beans.ReminderBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
+import edu.ncsu.csc.itrust.dao.mysql.PersonnelDAO;
 import edu.ncsu.csc.itrust.dao.mysql.ReminderDao;
 import edu.ncsu.csc.itrust.enums.TransactionType;
 import edu.ncsu.csc.itrust.exception.DBException;
@@ -25,6 +26,7 @@ public class AppointmentDayServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private DAOFactory factory;
     private ReminderDao reminderDao;
+    private PersonnelDAO personnelDAO;
     private static final String senderName = "System Reminder";
     private static final DateFormat hmsFormatter = new SimpleDateFormat("HH:mm:ss");
     private static final DateFormat dmyFormatter = new SimpleDateFormat("yyyy/MM/dd");
@@ -39,6 +41,7 @@ public class AppointmentDayServlet extends HttpServlet {
         super();
         this.factory = factory;
         reminderDao = factory.getReminderDAO();
+        personnelDAO = this.factory.getPersonnelDAO();
     }
 
 
@@ -47,12 +50,13 @@ public class AppointmentDayServlet extends HttpServlet {
         String param = request.getParameter("days");
         Integer days = Integer.parseInt(param);
         Long mid = Long.parseLong(request.getParameter("mid"));
-        String names=request.getParameter("name");
-        List<ApptBean> res = null;
+        List<ApptBean> res;
+        String names;
         try {
             res = factory.getApptDAO().getApptsFor(mid);
-        } catch (SQLException | DBException e) {
-
+            names=personnelDAO.getName(mid);
+        } catch (Exception e) {
+            throw new ServletException(e);
         }
         Date now = (new Date());
         Date later = new Date(now.getTime() + (1000 * 60 * 60 * 24 * days + 1));

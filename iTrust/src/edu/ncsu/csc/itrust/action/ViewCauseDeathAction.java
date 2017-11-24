@@ -48,71 +48,47 @@ public class ViewCauseDeathAction {
         List<String> causeDeathList = new ArrayList<>();
         for (Long patient : unique_patients) {
             PatientBean currentPatient = patientsDAO.getPatient(patient);
-            Gender currentGender = currentPatient.getGender();
             String causeDeath = currentPatient.getCauseOfDeath();
             if (causeDeath.equals("")) {
                 continue;
             }
-            String dateDeath = currentPatient.getDateOfDeathStr();
-            int yearDeath = Integer.parseInt(dateDeath.split("/")[2]);
-            if (yearDeath >= startingYear && yearDeath <= endingYear) {
-                if (gender.equals("all")) {
-                    causeDeathList.add(causeDeath);
-                } else if (gender.equals("male") && currentGender.getName().equals("Male")) {
-                    causeDeathList.add(causeDeath);
-                } else if (gender.equals("female") && currentGender.getName().equals("Female")) {
-                    causeDeathList.add(causeDeath);
-                }
-            }
+
+            filteredAdd(startingYear, endingYear, gender, causeDeathList, currentPatient);
         }
-        Map<String, Long> counts = new HashMap<>();
-        for (String causeDeath : causeDeathList) {
-            Long count = counts.get(causeDeath);
-            counts.put(causeDeath, ((count == null) ? 1 : count + 1));
-        }
-        List<Pair<Long, String>> freqList = new ArrayList<>();
-        for (Map.Entry<String, Long> entry : counts.entrySet()) {
-            freqList.add(new Pair<Long, String>(entry.getValue(), entry.getKey()));
-        }
-        Collections.sort(freqList, new Comparator<Pair<Long, String>>() {
-            @Override
-            public int compare(final Pair<Long, String> p1, final Pair<Long, String> p2) {
-                Long freq1 = p1.getKey();
-                Long freq2 = p2.getKey();
-                return freq2.compareTo(freq1);
-            }
-        });
-        String output = "";
-        for (int i = 0; i < 2 && i < freqList.size(); i++) {
-            Pair<Long, String> freqCause = freqList.get(i);
-            output += "ICD-9CM: "+(String) freqCause.getValue()
-                    + "; Cause of Death: " + (icdDAO.getICDCode((String) freqCause.getValue())).getDescription()
-                    + "; Frequency:" + String.valueOf((Long) freqCause.getKey()) + "\n";
-        }
-        return output;
+        return formatCauseOfDeaths(causeDeathList);
     }
 
     public String getCODStatisticsAll(int startingYear, int endingYear, String gender) throws DBException{
         List <PatientBean> all_patients = patientsDAO.getAllPatients();
         List<String> causeDeathList = new ArrayList<>();
         for (PatientBean currentPatient : all_patients) {
-            Gender currentGender = currentPatient.getGender();
             String causeDeath = currentPatient.getCauseOfDeath();
             if (causeDeath.equals("")) {
                 continue;
             }
-            String dateDeath = currentPatient.getDateOfDeathStr();
-            int yearDeath = Integer.parseInt(dateDeath.split("/")[2]);
-            if (yearDeath >= startingYear && yearDeath <= endingYear) {
-                if (gender.equals("all")) {
-                    causeDeathList.add(causeDeath);
-                } else if (gender.equals("male") && currentGender.getName().equals("Male")) {
-                    causeDeathList.add(causeDeath);
-                } else if (gender.equals("female") && currentGender.getName().equals("Female")) {
-                    causeDeathList.add(causeDeath);
-                }
+
+            filteredAdd(startingYear, endingYear, gender, causeDeathList, currentPatient);
+        }
+        return formatCauseOfDeaths(causeDeathList);
+    }
+
+    private void filteredAdd(int startingYear, int endingYear, String gender, List<String> causeDeathList, PatientBean currentPatient) {
+        String causeDeath = currentPatient.getCauseOfDeath();
+        Gender currentGender = currentPatient.getGender();
+        String dateDeath = currentPatient.getDateOfDeathStr();
+        int yearDeath = Integer.parseInt(dateDeath.split("/")[2]);
+        if (yearDeath >= startingYear && yearDeath <= endingYear) {
+            if (gender.equals("all")) {
+                causeDeathList.add(causeDeath);
+            } else if (gender.equals("male") && currentGender.getName().equals("Male")) {
+                causeDeathList.add(causeDeath);
+            } else if (gender.equals("female") && currentGender.getName().equals("Female")) {
+                causeDeathList.add(causeDeath);
             }
         }
+    }
+
+    private String formatCauseOfDeaths(List<String> causeDeathList) throws DBException {
         Map<String, Long> counts = new HashMap<>();
         for (String causeDeath : causeDeathList) {
             Long count = counts.get(causeDeath);
@@ -130,13 +106,17 @@ public class ViewCauseDeathAction {
                 return freq2.compareTo(freq1);
             }
         });
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for (int i = 0; i < 2 && i < freqList.size(); i++) {
             Pair<Long, String> freqCause = freqList.get(i);
-            output += "ICD-9CM: "+(String) freqCause.getValue()
-                    + "; Cause of Death: " + (icdDAO.getICDCode((String) freqCause.getValue())).getDescription()
-                    + "; Frequency:" + String.valueOf((Long) freqCause.getKey()) + "\n";
+            output.append("ICD-9CM: ");
+            output.append(freqCause.getValue());
+            output.append("; Cause of Death: ");
+            output.append((icdDAO.getICDCode((String) freqCause.getValue())).getDescription());
+            output.append("; Frequency:");
+            output.append(String.valueOf((Long) freqCause.getKey()));
+            output.append("\n");
         }
-        return output;
+        return output.toString();
     }
 }
