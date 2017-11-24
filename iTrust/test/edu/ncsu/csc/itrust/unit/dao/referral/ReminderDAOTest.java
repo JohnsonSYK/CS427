@@ -32,6 +32,7 @@ public class ReminderDAOTest extends TestCase {
         bean.setSubject(subject);
         return bean;
     }
+
     @Test
     public void testLogReminder() {
         DAOFactory factory = mock(DAOFactory.class);
@@ -55,6 +56,7 @@ public class ReminderDAOTest extends TestCase {
         } catch (DBException | SQLException e) { fail("Should not throw a DBexception"); }
 
     }
+
     @Test
     public void testGetReminderByMID() {
         DAOFactory factory = mock(DAOFactory.class);
@@ -75,6 +77,7 @@ public class ReminderDAOTest extends TestCase {
         } catch (DBException | SQLException e) { fail("Should not throw a DBexception"); }
 
     }
+
     @Test
     public void testGetReminderRID() {
         DAOFactory factory = mock(DAOFactory.class);

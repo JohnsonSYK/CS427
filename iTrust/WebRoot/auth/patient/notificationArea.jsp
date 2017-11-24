@@ -60,7 +60,7 @@ BillingDAO bills = prodDAO.getBillingDAO();
     <ul style="list-style-type: none;">
 
 		<li>
-			<a href="/iTrust/auth/patient/notifications.jsp">Notifications</a>
+			<a id="notification" href="/iTrust/auth/patient/notifications.jsp">Notifications</a>
 		</li>
 <% if(messageAction.getUnreadCount() == 0) { %>
 	<li>
