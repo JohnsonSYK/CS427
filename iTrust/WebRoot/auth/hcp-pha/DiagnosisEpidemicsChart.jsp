@@ -39,3 +39,4 @@ String chartTitle = "Diagnosis Cases Chart";
 
 <!-- The cewolf:img tag defines the actual chart in your JSP -->
 <cewolf:img chartid="graph" renderer="/charts/" width="600" height="400" border="2"/>
+
