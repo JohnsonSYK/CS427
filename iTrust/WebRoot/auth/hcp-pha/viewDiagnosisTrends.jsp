@@ -142,12 +142,106 @@
 
 
 <br />
+<script type = "text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type = "text/javascript">
+    var region_array=[];
+    var state_array=[];
+    var country_array=[];
 
+    <% for (int i=0;i<region_ds_bean.size();i++){%>
+    region_array.push("<%= region_ds_bean.get(i).getRegionStats()%>");
+    state_array.push("<%= state_ds_bean.get(i).getRegionStats()%>");
+    country_array.push("<%= country_ds_bean.get(i).getRegionStats()%>");
+    <%}%>
+
+	var week_1=[];
+	week_1.push('Week -1');
+    week_1.push(region_array[0]);
+    week_1.push(state_array[0]);
+    week_1.push(country_array[0]);
+
+    var week_2=[];
+    week_2.push('Week -2');
+    week_2.push(region_array[1]);
+    week_2.push(state_array[1]);
+    week_2.push(country_array[1]);
+
+    var week_3=[];
+    week_3.push('Week -3');
+    week_3.push(region_array[2]);
+    week_3.push(state_array[2]);
+    week_3.push(country_array[2]);
+
+    var week_4=[];
+    week_4.push('Week -4');
+    week_4.push(region_array[3]);
+    week_4.push(state_array[3]);
+    week_4.push(country_array[3]);
+
+    var week_5=[];
+    week_5.push('Week -5');
+    week_5.push(region_array[4]);
+    week_5.push(state_array[4]);
+    week_5.push(country_array[4]);
+
+    var week_6=[];
+    week_6.push('Week -6');
+    week_6.push(region_array[5]);
+    week_6.push(state_array[5]);
+    week_6.push(country_array[5]);
+
+    var week_7=[];
+    week_7.push('Week -7');
+    week_7.push(region_array[6]);
+    week_7.push(state_array[6]);
+    week_7.push(country_array[6]);
+
+    var week_8=[];
+    week_8.push('Week -8');
+    week_8.push(region_array[7]);
+    week_8.push(state_array[7]);
+    week_8.push(country_array[7]);
+
+    google.charts.load('current',{'packages':['bar']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Week','Region Count','State Count','Country Count'],
+			week_1,
+			week_2,
+			week_3,
+			week_4,
+			week_5,
+			week_6,
+			week_7,
+			week_8
+
+		]);
+        var options={
+            chart: {
+                title: 'Trend Report',
+				subtitle: 'Regional Count, State Count and Country Count'
+			},
+			bars:'horizontal'
+		};
+
+        var chart= new google.charts.Bar(document.getElementById('barchart_material'));
+
+        chart.draw(data,google.charts.Bar.convertOptions(options));
+	}
+
+</script>
 <%--
 <p style="display:block; margin-left:auto; margin-right:auto; width:600px;">
 <%@include file="DiagnosisTrendChart.jsp" %>
 </p>
 --%>
+<body>
+	<div id="barchart_material" style="width:900px; height:500px;"></div>
+</body>
 <% } %>
+
+
 <br />
 <br />

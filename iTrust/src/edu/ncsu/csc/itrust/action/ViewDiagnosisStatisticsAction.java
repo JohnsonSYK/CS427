@@ -124,7 +124,7 @@ public class ViewDiagnosisStatisticsAction {
 				throw new FormValidationException("ICDCode must be valid diagnosis!");
 			}
 
-			for (int i=0;i<=8;i++){
+			for (int i=0;i<=7;i++){
 				upper=cal.getTime();
 				cal.add(Calendar.HOUR,-7*24);
 				startDate=cal.getTime();
@@ -172,7 +172,7 @@ public class ViewDiagnosisStatisticsAction {
 				throw new FormValidationException("ICDCode must be valid diagnosis!");
 			}
 
-			for (int i=0;i<=8;i++){
+			for (int i=0;i<=7;i++){
 				upper=cal.getTime();
 				//System.out.println(upper);
 				cal.add(Calendar.HOUR,-7*24);
@@ -223,7 +223,7 @@ public class ViewDiagnosisStatisticsAction {
 				throw new FormValidationException("ICDCode must be valid diagnosis!");
 			}
 
-			for (int i=0;i<=8;i++){
+			for (int i=0;i<=7;i++){
 				upper=cal.getTime();
 				cal.add(Calendar.HOUR,-7*24);
 				startDate=cal.getTime();
