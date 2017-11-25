@@ -17,6 +17,7 @@
 
 <%
     pageTitle = "iTrust - View cause-of-death trends report";
+    loggingAction.logEvent(TransactionType.DEATH_TRENDS_VIEW, loggedInMID, 0, "");
 %>
 
 <%@include file="/header.jsp" %>
