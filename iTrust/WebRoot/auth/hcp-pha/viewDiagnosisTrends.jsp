@@ -86,12 +86,6 @@
 
 		<td style=display:none>End Date:</td>
 		<td></td><td></td>
-		<%--
-		<td>
-			<input name="endDate" value="<%= StringEscapeUtils.escapeHtml("" + (endDate)) %>" size="10">
-			<input type=button value="Select Date" onclick="displayDatePicker('endDate');">
-		</td>
-		--%>
 
 	</tr>
 	<tr>
@@ -104,30 +98,6 @@
 <br />
 
 <%  if (region_ds_bean != null) { %>
-
-
-
-<%--
-<tr>
-	<th>Diagnosis code</th>
-	<th>Complete Zip</th>
-	<th>Cases in Zip</th>
-	<th>Cases in Region</th>
-	<th>Start Date</th>
-	<th>End Date</th>
-</tr>
-<tr style="text-align:center;">
-	<td><%= icdCode %></td>
-	<td><%= zipCode %></td>
-	<td><%= dsBean.getZipStats() %></td>
-	<td><%= dsBean.getRegionStats() %></td>
-	<td><%= startDate %></td>
-	<td><%= endDate %></td>
-</tr>
---%>
-
-</table>
-
 
 <br />
 <script type = "text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -226,11 +196,7 @@
 	}
 
 </script>
-<%--
-<p style="display:block; margin-left:auto; margin-right:auto; width:600px;">
-<%@include file="DiagnosisTrendChart.jsp" %>
-</p>
---%>
+
 <body>
 	<div id="barchart_material" style="width:900px; height:500px;"></div>
 </body>
