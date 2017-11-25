@@ -106,19 +106,7 @@
 <%  if (region_ds_bean != null) { %>
 
 
-<table class="fTable" align="center" id="diagnosisStatisticsTable">
-<% for (int i = 0; i < region_ds_bean.size();i++){ %>
 
-	<tr>
-			<td><%=region_ds_bean.get(i).getZipCode()%></td>
-			<td><%=region_ds_bean.get(i).getRegionStats()%></td>
-			<td><%=state_ds_bean.get(i).getZipCode()%></td>
-			<td><%=state_ds_bean.get(i).getRegionStats()%></td>
-			<td><%=country_ds_bean.get(i).getZipCode()%></td>
-			<td><%=country_ds_bean.get(i).getRegionStats()%></td>
-	</tr>
-
-	<% }%>
 <%--
 <tr>
 	<th>Diagnosis code</th>
@@ -156,51 +144,51 @@
 
 	var week_1=[];
 	week_1.push('Week -1');
-    week_1.push(region_array[0]);
-    week_1.push(state_array[0]);
-    week_1.push(country_array[0]);
+    week_1.push(parseInt(region_array[0]));
+    week_1.push(parseInt(state_array[0]));
+    week_1.push(parseInt(country_array[0]));
 
     var week_2=[];
     week_2.push('Week -2');
-    week_2.push(region_array[1]);
-    week_2.push(state_array[1]);
-    week_2.push(country_array[1]);
+    week_2.push(parseInt(region_array[1]));
+    week_2.push(parseInt(state_array[1]));
+    week_2.push(parseInt(country_array[1]));
 
     var week_3=[];
     week_3.push('Week -3');
-    week_3.push(region_array[2]);
-    week_3.push(state_array[2]);
-    week_3.push(country_array[2]);
+    week_3.push(parseInt(region_array[2]));
+    week_3.push(parseInt(state_array[2]));
+    week_3.push(parseInt(country_array[2]));
 
     var week_4=[];
     week_4.push('Week -4');
-    week_4.push(region_array[3]);
-    week_4.push(state_array[3]);
-    week_4.push(country_array[3]);
+    week_4.push(parseInt(region_array[3]));
+    week_4.push(parseInt(state_array[3]));
+    week_4.push(parseInt(country_array[3]));
 
     var week_5=[];
     week_5.push('Week -5');
-    week_5.push(region_array[4]);
-    week_5.push(state_array[4]);
-    week_5.push(country_array[4]);
+    week_5.push(parseInt(region_array[4]));
+    week_5.push(parseInt(state_array[4]));
+    week_5.push(parseInt(country_array[4]));
 
     var week_6=[];
     week_6.push('Week -6');
-    week_6.push(region_array[5]);
-    week_6.push(state_array[5]);
-    week_6.push(country_array[5]);
+    week_6.push(parseInt(region_array[5]));
+    week_6.push(parseInt(state_array[5]));
+    week_6.push(parseInt(country_array[5]));
 
     var week_7=[];
     week_7.push('Week -7');
-    week_7.push(region_array[6]);
-    week_7.push(state_array[6]);
-    week_7.push(country_array[6]);
+    week_7.push(parseInt(region_array[6]));
+    week_7.push(parseInt(state_array[6]));
+    week_7.push(parseInt(country_array[6]));
 
     var week_8=[];
     week_8.push('Week -8');
-    week_8.push(region_array[7]);
-    week_8.push(state_array[7]);
-    week_8.push(country_array[7]);
+    week_8.push(parseInt(region_array[7]));
+    week_8.push(parseInt(state_array[7]));
+    week_8.push(parseInt(country_array[7]));
 
     google.charts.load('current',{'packages':['bar']});
     google.charts.setOnLoadCallback(drawChart);
@@ -216,14 +204,20 @@
 			week_6,
 			week_7,
 			week_8
-
 		]);
         var options={
             chart: {
                 title: 'Trend Report',
 				subtitle: 'Regional Count, State Count and Country Count'
 			},
-			bars:'horizontal'
+			vAxis: {
+				minValue:0,
+				viewWindow: {
+                    min: 0
+				}
+			},
+			bars:'vertical',
+			height: 400
 		};
 
         var chart= new google.charts.Bar(document.getElementById('barchart_material'));
