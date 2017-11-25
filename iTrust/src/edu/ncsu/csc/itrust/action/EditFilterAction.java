@@ -37,7 +37,7 @@ public class EditFilterAction {
         return filterDAO.getFilter(Mid);
     }
 
-    public Boolean addFilter(String sender, String subject, String sub_pos, String sub_neg, Date d_left, Date d_right) throws DBException{
+    public Boolean addFilter(String sender, String subject, String sub_pos, String sub_neg, Date d_left, Date d_right){
         FilterBean f = new FilterBean();
         f.setMid(Mid);
         f.setSender(sender);
@@ -50,7 +50,7 @@ public class EditFilterAction {
             filterDAO.add(f);
             return true;
         }
-        catch (Exception e){
+        catch (DBException e){
             e.printStackTrace();
             return false;
         }
