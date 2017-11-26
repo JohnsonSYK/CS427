@@ -38,12 +38,18 @@ public class PatientPreRegisterTest extends iTrustSeleniumTest {
 
         WebElement result = driver.findElement(By.id("iTrustContent")).findElement(By.tagName("h3"));
         assertTrue(result.getText().contains("Pre-registration successful! Your MID is "));
+
+        String returnedMID = result.getText().substring(result.getText().length()-3);
+        driver = login(returnedMID, "pw");
+
+        WebElement loginMessage = driver.findElement(By.id("iTrustContent")).findElement(By.tagName("h2"));
+        assertTrue(loginMessage.getText().compareTo("Welcome Test Test! As a pre-registered patient you will need a HCP to activate your account in order to use iTrust") == 0);
     }
 
     /**
-     * Test successful pre-registration with only the required fields
+     * Test failed pre-registration due to email already being used
      */
-    public void testInvalidEmailError() throws Exception {
+    public void testUsedEmailError() throws Exception {
         openPreRegisterForm();
 
         driver.findElement(By.name("p_fname")).sendKeys("Test");
@@ -54,6 +60,57 @@ public class PatientPreRegisterTest extends iTrustSeleniumTest {
 
         driver.findElement(By.name("p_fname")).submit();
 
-        assertEquals(1, driver.findElements(By.className("iTrustError")).size());
+        assertTrue(driver.findElements(By.className("iTrustError")).size() > 0);
+    }
+
+    /**
+     * Test failed pre-registration due to invalid email input
+     */
+    public void testInvalidEmailError() throws Exception {
+        openPreRegisterForm();
+
+        driver.findElement(By.name("p_fname")).sendKeys("Test");
+        driver.findElement(By.name("p_lname")).sendKeys("Test");
+        driver.findElement(By.name("p_email")).sendKeys("nobody");
+        driver.findElement(By.name("p_password")).sendKeys("pw");
+        driver.findElement(By.name("p_verify")).sendKeys("pw");
+
+        driver.findElement(By.name("p_fname")).submit();
+
+        assertTrue(driver.findElements(By.className("iTrustError")).size() > 0);
+    }
+
+    /**
+     * Test failed pre-registration due to password verification mismatch
+     */
+    public void testPasswordError() throws Exception {
+        openPreRegisterForm();
+
+        driver.findElement(By.name("p_fname")).sendKeys("Test");
+        driver.findElement(By.name("p_lname")).sendKeys("Test");
+        driver.findElement(By.name("p_email")).sendKeys("nobody@gmail.com");
+        driver.findElement(By.name("p_password")).sendKeys("pw");
+        driver.findElement(By.name("p_verify")).sendKeys("blah");
+
+        driver.findElement(By.name("p_fname")).submit();
+
+        assertTrue(driver.findElements(By.className("iTrustError")).size() > 0);
+    }
+
+    /**
+     * Test failed pre-registration due to missing inputs
+     */
+    public void testEmptyFieldsError() throws Exception {
+        openPreRegisterForm();
+
+        driver.findElement(By.name("p_fname")).sendKeys("Test");
+        driver.findElement(By.name("p_lname")).sendKeys("Test");
+        driver.findElement(By.name("p_email")).sendKeys("nobody@gmail.com");
+        driver.findElement(By.name("p_password")).sendKeys("pw");
+        driver.findElement(By.name("p_verify")).sendKeys("pw");
+
+        driver.findElement(By.name("p_fname")).submit();
+
+        assertTrue(driver.findElements(By.className("iTrustError")).size() > 0);
     }
 }
