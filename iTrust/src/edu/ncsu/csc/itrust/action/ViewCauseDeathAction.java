@@ -11,6 +11,7 @@ import edu.ncsu.csc.itrust.dao.mysql.ICDCodesDAO;
 import edu.ncsu.csc.itrust.dao.mysql.OfficeVisitDAO;
 import edu.ncsu.csc.itrust.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.enums.Gender;
+import edu.ncsu.csc.itrust.enums.TransactionType;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
@@ -21,18 +22,24 @@ import javafx.util.Pair;
  * for a logged in HCP and all HCPs filtered by gender and year of death
  */
 public class ViewCauseDeathAction {
+    private int CAUSE_OF_DEATH_TARGET = -1;
     /** Database access methods for ICD codes (diagnoses) */
     private ICDCodesDAO icdDAO;
     /** Database access methods for patients information */
     private PatientDAO patientsDAO;
     /** Database access methods for office visits information */
     private OfficeVisitDAO ovDAO;
+    /**
+     * Database factory
+     */
+    private DAOFactory factory;
 
     /**
      * Constructor for the action. Initializes DAO fields
      * @param factory The session's factory for DAOs
      */
     public ViewCauseDeathAction(DAOFactory factory) {
+        this.factory = factory;
         this.icdDAO = factory.getICDCodesDAO();
         this.patientsDAO = factory.getPatientDAO();
         this.ovDAO = factory.getOfficeVisitDAO();
@@ -49,6 +56,10 @@ public class ViewCauseDeathAction {
      * @throws DBException if cannot connect to db
      */
     public String getCODStatisticsMID(Long MID, int startingYear, int endingYear, String gender) throws DBException{
+        EventLoggingAction loggingAction = new EventLoggingAction(this.factory);
+        loggingAction.logEvent(TransactionType.MESSAGE_SEND, MID, CAUSE_OF_DEATH_TARGET ,
+                String.format("Getting Cause of Death stats for mid=%u, startingYear=%d, endingYear=%d, gender=%s",
+                        MID, startingYear, endingYear, gender));
         List<OfficeVisitBean> officeVisits = this.ovDAO.getAllOfficeVisitsForLHCP(MID);
         List<Long> patients = new ArrayList<>();
         for (OfficeVisitBean visit : officeVisits) {
@@ -76,7 +87,11 @@ public class ViewCauseDeathAction {
      * @return Summary as above
      * @throws DBException if cannot connect to db
      */
-    public String getCODStatisticsAll(int startingYear, int endingYear, String gender) throws DBException{
+    public String getCODStatisticsAll(Long MID, int startingYear, int endingYear, String gender) throws DBException{
+        EventLoggingAction loggingAction = new EventLoggingAction(this.factory);
+        loggingAction.logEvent(TransactionType.MESSAGE_SEND, MID, CAUSE_OF_DEATH_TARGET ,
+                String.format("Getting all Cause of Death stats for mid=%u, startingYear=%d, endingYear=%d, gender=%s",
+                        MID, startingYear, endingYear, gender));
         List <PatientBean> all_patients = patientsDAO.getAllPatients();
         List<String> causeDeathList = new ArrayList<>();
         for (PatientBean currentPatient : all_patients) {

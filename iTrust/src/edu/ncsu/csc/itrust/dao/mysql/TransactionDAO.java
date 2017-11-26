@@ -186,7 +186,8 @@ public class TransactionDAO {
 	 * @return A java.util.List of transactions.
 	 * @throws DBException
 	 */
-	public List<TransactionBean> getRecordAccesses(long patientID, long dlhcpID, java.util.Date lower, java.util.Date upper, boolean getByRole) throws DBException {
+	public List<TransactionBean> getRecordAccesses(long patientID, long dlhcpID, java.util.Date lower,
+												   java.util.Date upper, boolean getByRole) throws DBException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		try {

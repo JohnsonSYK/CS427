@@ -54,7 +54,7 @@ Illegal date filter
 %>
 Cause of death statistics for your patients: <br><%=output%><br>
 <%
-            output = CDA.getCODStatisticsAll(startingYear, endingYear, gender);
+            output = CDA.getCODStatisticsAll(loggedInMID, startingYear, endingYear, gender);
             if (output == "")
                 output = "No deaths in a whole hospital? Close the morgue, we're on a streak!";
 %>
