@@ -15,15 +15,11 @@
 	loggingAction.logEvent(TransactionType.DIAGNOSIS_TRENDS_VIEW, loggedInMID.longValue(), 0, "");
 
 	ViewDiagnosisStatisticsAction diagnoses = new ViewDiagnosisStatisticsAction(prodDAO);
-	//DiagnosisStatisticsBean dsBean = null;
 	ArrayList<DiagnosisStatisticsBean> region_ds_bean=new ArrayList<>();
 	ArrayList<DiagnosisStatisticsBean> state_ds_bean=new ArrayList<>();
 	ArrayList<DiagnosisStatisticsBean> country_ds_bean=new ArrayList<>();
 	//get form data
 	String startDate = request.getParameter("startDate");
-	//Date endDate = new SimpleDateFormat("MM/DD/yyyy").parse(startDate);
-
-	//String endDate = request.getParameter("endDate");
 	
 	String zipCode = request.getParameter("zipCode");
 	if (zipCode == null)
@@ -36,7 +32,6 @@
 		region_ds_bean=diagnoses.getDiagnosisStatistics_region(startDate,icdCode,zipCode);
 		state_ds_bean=diagnoses.getDiagnosisStatistics_state(startDate,icdCode,zipCode);
 		country_ds_bean=diagnoses.getDiagnosisStatistics_country(startDate,icdCode,zipCode);
-	    //dsBean = diagnoses.getDiagnosisStatistics(startDate, endDate2, icdCode, zipCode);
 
 
 	} catch(FormValidationException e){
@@ -45,8 +40,6 @@
 	
 	if (startDate == null)
 		startDate = "";
-	//if (endDate == null)
-	//	endDate = "";
 	if (icdCode == null)
 		icdCode = "";
 	
@@ -166,14 +159,14 @@
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Week','Region Count','State Count','Country Count'],
-			week_1,
-			week_2,
-			week_3,
-			week_4,
-			week_5,
-			week_6,
+			week_8,
 			week_7,
-			week_8
+			week_6,
+			week_5,
+			week_4,
+			week_3,
+			week_2,
+			week_1
 		]);
         var options={
             chart: {
