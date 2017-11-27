@@ -22,7 +22,7 @@ import javafx.util.Pair;
  * for a logged in HCP and all HCPs filtered by gender and year of death
  */
 public class ViewCauseDeathAction {
-    private int CAUSE_OF_DEATH_TARGET = -1;
+    private int CAUSE_OF_DEATH_TARGET = 0;
     /** Database access methods for ICD codes (diagnoses) */
     private ICDCodesDAO icdDAO;
     /** Database access methods for patients information */
@@ -57,8 +57,8 @@ public class ViewCauseDeathAction {
      */
     public String getCODStatisticsMID(Long MID, int startingYear, int endingYear, String gender) throws DBException{
         EventLoggingAction loggingAction = new EventLoggingAction(this.factory);
-        loggingAction.logEvent(TransactionType.MESSAGE_SEND, MID, CAUSE_OF_DEATH_TARGET ,
-                String.format("Getting Cause of Death stats for mid=%u, startingYear=%d, endingYear=%d, gender=%s",
+        loggingAction.logEvent(TransactionType.DEATH_TRENDS_VIEW, MID, CAUSE_OF_DEATH_TARGET ,
+                String.format("Getting Cause of Death stats for mid=%d%n, startingYear=%d, endingYear=%d, gender=%s",
                         MID, startingYear, endingYear, gender));
         List<OfficeVisitBean> officeVisits = this.ovDAO.getAllOfficeVisitsForLHCP(MID);
         List<Long> patients = new ArrayList<>();
@@ -89,8 +89,8 @@ public class ViewCauseDeathAction {
      */
     public String getCODStatisticsAll(Long MID, int startingYear, int endingYear, String gender) throws DBException{
         EventLoggingAction loggingAction = new EventLoggingAction(this.factory);
-        loggingAction.logEvent(TransactionType.MESSAGE_SEND, MID, CAUSE_OF_DEATH_TARGET ,
-                String.format("Getting all Cause of Death stats for mid=%u, startingYear=%d, endingYear=%d, gender=%s",
+        loggingAction.logEvent(TransactionType.DEATH_TRENDS_VIEW, MID, CAUSE_OF_DEATH_TARGET ,
+                String.format("Getting all Cause of Death stats for mid=%d%n, startingYear=%d, endingYear=%d, gender=%s",
                         MID, startingYear, endingYear, gender));
         List <PatientBean> all_patients = patientsDAO.getAllPatients();
         List<String> causeDeathList = new ArrayList<>();
