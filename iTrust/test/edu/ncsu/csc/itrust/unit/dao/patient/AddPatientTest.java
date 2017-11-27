@@ -70,4 +70,37 @@ public class AddPatientTest extends TestCase {
 		assertEquals("012-345-6789", patientDAO.getPatient(pid).getEmergencyPhone());
 	}
 
+	public void testValidEmail() throws Exception {
+		gen.patient1();
+		assertFalse(patientDAO.validPatientEmail("nobody@gmail.com"));
+		assertTrue(patientDAO.validPatientEmail("valid@gmail.com"));
+	}
+
+	public void testExistingPatientIsNotPreRegistered() throws Exception {
+		gen.patient1();
+		assertFalse(patientDAO.isPreRegistered(1L));
+	}
+
+	public void testNewPatientIsNotPreRegistered() throws Exception {
+		long pid = patientDAO.addEmptyPatient();
+		PatientBean p = patientDAO.getPatient(pid);
+		p.setFirstName("Test");
+		p.setLastName("Test");
+		p.setEmail("test1@gmail.com");
+		patientDAO.editPatient(p, pid);
+
+		assertFalse(patientDAO.isPreRegistered(1L));
+	}
+
+	public void testIsPreRegistered() throws Exception {
+		long pid = patientDAO.addEmptyPatient();
+		PatientBean p = patientDAO.getPatient(pid);
+		p.setFirstName("Test");
+		p.setLastName("Test");
+		p.setEmail("test2@gmail.com");
+		p.setPreRegister(true);
+		patientDAO.editPatient(p, pid);
+
+		assertTrue(patientDAO.isPreRegistered(pid));
+	}
 }

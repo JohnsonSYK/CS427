@@ -343,6 +343,12 @@ public class PatientDAO {
 		}
 	}
 
+	/**
+	 * Check if the email isn't already being used
+	 * @param email the email to check
+	 * @return true if the email isn't being used by another user
+	 * @throws DBException
+	 */
 	public boolean validPatientEmail(String email) throws DBException {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -364,6 +370,12 @@ public class PatientDAO {
 		}
 	}
 
+	/**
+	 * Check if patient is pre-registered or not
+	 * @param mid the MID of the patient
+	 * @return true if the patient is pre-registered
+	 * @throws DBException
+	 */
 	public boolean isPreRegistered(final long mid) throws DBException {
 		Connection conn = null;
 		PreparedStatement ps = null;

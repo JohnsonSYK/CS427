@@ -133,6 +133,7 @@ CREATE TABLE historypatients(
 	SpiritualPractices varchar(512) default '',
 	AlternateName varchar(32) default '',
 	DateOfDeactivation DATE default NULL,
+	isPreRegistered BOOLEAN default NULL,
 	PRIMARY KEY (ID)
 ) ENGINE=MyISAM;
 
