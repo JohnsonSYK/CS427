@@ -73,7 +73,7 @@ public class ViewDiagnosisStatisticsAction {
 				throw new FormValidationException("Start date must be before end date!");
 			
 			if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
-				throw new FormValidationException("Zip Code must be 5 digits!");
+				throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
 
 			boolean validCode = false;
 			for(DiagnosisBean diag : getDiagnosisCodes()) {
@@ -85,13 +85,138 @@ public class ViewDiagnosisStatisticsAction {
 			}
 
 			dsBean = diagnosesDAO.getDiagnosisCounts(icdCode, zip, lower, upper);
-			
+
 		} catch (ParseException e) {
 			throw new FormValidationException("Enter dates in MM/dd/yyyy");
 		} 
 		
 		
 		return dsBean;
+	}
+
+	public ArrayList<DiagnosisStatisticsBean> getDiagnosisStatistics_country(String upperDate, String icdCode, String zip) throws FormValidationException, ITrustException {
+		ArrayList<DiagnosisStatisticsBean> dsBeanList = new ArrayList<>();
+		try {
+
+			if (upperDate == null || icdCode == null)
+				return null;
+
+			//Here "upper" is the date that count to, "startDate" is the date count from, will be both use in the function below.
+			Date upper = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
+			Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(upper);
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+			if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
+				throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
+
+			boolean validCode = false;
+			for(DiagnosisBean diag : getDiagnosisCodes()) {
+				if (diag.getICDCode().equals(icdCode))
+					validCode = true;
+			}
+			if (validCode == false) {
+				throw new FormValidationException("ICDCode must be valid diagnosis!");
+			}
+
+			for (int i=0;i<=7;i++){
+				upper=cal.getTime();
+				cal.add(Calendar.HOUR,-7*24);
+				startDate=cal.getTime();
+				dsBeanList.add(diagnosesDAO.getDiagnosisCounts_country(icdCode, zip, startDate, upper));
+
+			}
+
+
+		} catch (ParseException e) {
+			throw new FormValidationException("Enter dates in MM/dd/yyyy");
+		}
+
+
+		return dsBeanList;
+	}
+
+	public ArrayList<DiagnosisStatisticsBean> getDiagnosisStatistics_region(String upperDate, String icdCode, String zip) throws FormValidationException, ITrustException {
+		ArrayList<DiagnosisStatisticsBean> dsBeanList = new ArrayList<>();
+		try {
+
+			if (upperDate == null || icdCode == null)
+				return null;
+
+			Date upper = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
+			Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(upper);
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+			if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
+				throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
+
+			boolean validCode = false;
+			for(DiagnosisBean diag : getDiagnosisCodes()) {
+				if (diag.getICDCode().equals(icdCode))
+					validCode = true;
+			}
+			if (validCode == false) {
+				throw new FormValidationException("ICDCode must be valid diagnosis!");
+			}
+
+			for (int i=0;i<=7;i++){
+				upper=cal.getTime();
+				cal.add(Calendar.HOUR,-7*24);
+				startDate=cal.getTime();
+				dsBeanList.add(diagnosesDAO.getDiagnosisCounts_region(icdCode, zip, startDate, upper));
+
+			}
+
+		} catch (ParseException e) {
+			throw new FormValidationException("Enter dates in MM/dd/yyyy");
+		}
+
+
+		return dsBeanList;
+	}
+
+	public ArrayList<DiagnosisStatisticsBean> getDiagnosisStatistics_state(String upperDate, String icdCode, String zip) throws FormValidationException, ITrustException {
+		ArrayList<DiagnosisStatisticsBean> dsBeanList = new ArrayList<>();
+		try {
+
+			if (upperDate == null || icdCode == null)
+				return null;
+
+			Date upper = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
+			Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(upper);
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+			if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
+				throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
+
+			boolean validCode = false;
+			for(DiagnosisBean diag : getDiagnosisCodes()) {
+				if (diag.getICDCode().equals(icdCode))
+					validCode = true;
+			}
+			if (validCode == false) {
+				throw new FormValidationException("ICDCode must be valid diagnosis!");
+			}
+
+			for (int i=0;i<=7;i++){
+				upper=cal.getTime();
+				cal.add(Calendar.HOUR,-7*24);
+				startDate=cal.getTime();
+				dsBeanList.add(diagnosesDAO.getDiagnosisCounts_state(icdCode, zip, startDate, upper));
+
+			}
+
+		} catch (ParseException e) {
+			throw new FormValidationException("Enter dates in MM/dd/yyyy");
+		}
+
+
+		return dsBeanList;
 	}
 	
 	/**
@@ -127,7 +252,7 @@ public class ViewDiagnosisStatisticsAction {
 			throw new FormValidationException("Enter dates in MM/dd/yyyy");
 		}
 		if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
-			throw new FormValidationException("Zip Code must be 5 digits!");
+			throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
 		
 		DiagnosisStatisticsBean dbWeek = diagnosesDAO.getCountForWeekOf(icdCode, zip, lower);
 		DiagnosisStatisticsBean dbAvg = new DiagnosisStatisticsBean(zip, 0, 0, lower, lower);
