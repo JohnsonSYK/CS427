@@ -92,6 +92,17 @@ CREATE TABLE patients(
 	PRIMARY KEY (MID)
 ) ENGINE=MyISAM;
 
+CREATE TABLE filters (
+  mid BIGINT(20) UNSIGNED PRIMARY KEY,
+  sender varchar(255),
+  subject varchar(255),
+  sub_pos varchar(255),
+  sub_neg varchar(255),
+  date_left DATE,
+  date_right DATE
+) ENGINE=MyISAM;
+
+
 CREATE TABLE historypatients(
 	ID BIGINT unsigned  auto_increment,
 	changeDate DATE NOT NULL,
