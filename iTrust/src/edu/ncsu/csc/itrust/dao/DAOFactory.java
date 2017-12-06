@@ -47,6 +47,14 @@ public class DAOFactory {
 	}
 
 	/**
+	 *
+	 * @return this DAOFactory's Filter DAO
+	 */
+	public FilterDAO getFilterDAO() {
+		return new FilterDAO(this);
+	}
+
+	/**
 	 * 
 	 * @return this DAOFactory's AccessDAO
 	 */

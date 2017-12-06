@@ -1,22 +1,7 @@
 package edu.ncsu.csc.itrust.unit.bean;
 
+import edu.ncsu.csc.itrust.beans.loaders.*;
 import junit.framework.TestCase;
-import edu.ncsu.csc.itrust.beans.loaders.AllergyBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.DiagnosisBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.FamilyBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.HospitalBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.LOINCBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.LabProcedureBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.MedicationBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.OfficeVisitLoader;
-import edu.ncsu.csc.itrust.beans.loaders.OperationalProfileLoader;
-import edu.ncsu.csc.itrust.beans.loaders.PrescriptionReportBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.RemoteMonitoringListsBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.ReportRequestBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.SurveyLoader;
-import edu.ncsu.csc.itrust.beans.loaders.SurveyResultBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.TransactionBeanLoader;
-import edu.ncsu.csc.itrust.beans.loaders.VisitReminderReturnFormLoader;
 
 public class BeanLoaderTest extends TestCase {
 	
@@ -136,6 +121,13 @@ public class BeanLoaderTest extends TestCase {
 		
 		try {
 			new VisitReminderReturnFormLoader().loadParameters(null, null);
+			fail("Should have thrown Exception");
+		} catch (IllegalStateException ex) {
+			assertEquals("unimplemented!", ex.getMessage());
+		}
+
+		try {
+			new FilterLoader().loadParameters(null, null);
 			fail("Should have thrown Exception");
 		} catch (IllegalStateException ex) {
 			assertEquals("unimplemented!", ex.getMessage());

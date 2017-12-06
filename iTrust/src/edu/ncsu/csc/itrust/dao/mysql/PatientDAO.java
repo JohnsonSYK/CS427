@@ -218,7 +218,6 @@ public class PatientDAO {
 			ps.close();
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -236,7 +235,6 @@ public class PatientDAO {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
@@ -345,6 +343,12 @@ public class PatientDAO {
 		}
 	}
 
+	/**
+	 * Check if the email isn't already being used
+	 * @param email the email to check
+	 * @return true if the email isn't being used by another user
+	 * @throws DBException
+	 */
 	public boolean validPatientEmail(String email) throws DBException {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -366,6 +370,12 @@ public class PatientDAO {
 		}
 	}
 
+	/**
+	 * Check if patient is pre-registered or not
+	 * @param mid the MID of the patient
+	 * @return true if the patient is pre-registered
+	 * @throws DBException
+	 */
 	public boolean isPreRegistered(final long mid) throws DBException {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -631,33 +641,8 @@ public class PatientDAO {
 				bean = patientLoader.loadSingle(rs);
 			rs.close();
 			ps.close();
-			if(bean.getMID() == representee)
-				return true;
-			return false;
-		} catch (SQLException e) {
-			
-			throw new DBException(e);
-		} finally {
-			DBUtil.closeConnection(conn, ps);
-		}
-	}
-	
-	public boolean checkIfPatientIsActive(long pid) throws ITrustException
-	{
-		Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			if (pid == 0L) throw new SQLException("pid cannot be 0");
-			conn = factory.getConnection();
-			ps = conn.prepareStatement("SELECT * FROM patients WHERE MID=? AND DateOfDeactivation IS NULL");
-			ps.setLong(1, pid);
-			ResultSet rs = ps.executeQuery();
-			PatientBean bean = new PatientBean();
-			if(rs.next())
-				bean = patientLoader.loadSingle(rs);
-			rs.close();
-			ps.close();
-			if(bean.getMID() == pid)
+			if(bean.getMID()
+					== representee)
 				return true;
 			return false;
 		} catch (SQLException e) {

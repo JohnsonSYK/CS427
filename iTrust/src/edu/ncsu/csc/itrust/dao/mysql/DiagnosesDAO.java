@@ -120,7 +120,128 @@ public class DiagnosesDAO {
 		}
 		
 	}
-	
+
+	public DiagnosisStatisticsBean getDiagnosisCounts_region(String icdCode, String zipCode, java.util.Date lower, java.util.Date upper) throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		DiagnosisStatisticsBean dsBean = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT * FROM ovdiagnosis INNER JOIN officevisits ON ovdiagnosis.VisitID=officevisits.ID INNER JOIN patients ON officevisits.PatientID=patients.MID WHERE ICDCode=? AND zip=? AND visitDate >= ? AND visitDate <= ? ");
+			ps.setString(1, icdCode);
+			ps.setString(2, zipCode);
+			ps.setTimestamp(3, new Timestamp(lower.getTime()));
+			// add 1 day's worth to include the upper
+			ps.setTimestamp(4, new Timestamp(upper.getTime()));
+
+			ResultSet rs = ps.executeQuery();
+			rs.last();
+			int local = rs.getRow();
+			ps.close();
+			ps = conn.prepareStatement("SELECT * FROM ovdiagnosis INNER JOIN officevisits ON ovdiagnosis.VisitID=officevisits.ID INNER JOIN patients ON officevisits.PatientID=patients.MID WHERE ICDCode=? AND zip LIKE ? AND visitDate >= ? AND visitDate <= ? ");
+			ps.setString(1, icdCode);
+			ps.setString(2, zipCode.substring(0, 3) + "%");
+			ps.setTimestamp(3, new Timestamp(lower.getTime()));
+			// add 1 day's worth to include the upper
+			ps.setTimestamp(4, new Timestamp(upper.getTime()));
+
+			rs = ps.executeQuery();
+			rs.last();
+			int region = rs.getRow();
+
+			dsBean = new DiagnosisStatisticsBean(zipCode, local, region, lower, upper);
+			rs.close();
+			ps.close();
+			return dsBean;
+		} catch (SQLException e) {
+
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+
+	}
+	public DiagnosisStatisticsBean getDiagnosisCounts_state(String icdCode, String zipCode, java.util.Date lower, java.util.Date upper) throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		DiagnosisStatisticsBean dsBean = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT * FROM ovdiagnosis INNER JOIN officevisits ON ovdiagnosis.VisitID=officevisits.ID INNER JOIN patients ON officevisits.PatientID=patients.MID WHERE ICDCode=? AND zip=? AND visitDate >= ? AND visitDate <= ? ");
+			ps.setString(1, icdCode);
+			ps.setString(2, zipCode);
+			ps.setTimestamp(3, new Timestamp(lower.getTime()));
+			// add 1 day's worth to include the upper
+			ps.setTimestamp(4, new Timestamp(upper.getTime()));
+
+			ResultSet rs = ps.executeQuery();
+			rs.last();
+			int local = rs.getRow();
+			ps.close();
+			ps = conn.prepareStatement("SELECT * FROM ovdiagnosis INNER JOIN officevisits ON ovdiagnosis.VisitID=officevisits.ID INNER JOIN patients ON officevisits.PatientID=patients.MID WHERE ICDCode=? AND zip LIKE ? AND visitDate >= ? AND visitDate <= ? ");
+			ps.setString(1, icdCode);
+			ps.setString(2, zipCode.substring(0, 2) + "%");
+			ps.setTimestamp(3, new Timestamp(lower.getTime()));
+			// add 1 day's worth to include the upper
+			ps.setTimestamp(4, new Timestamp(upper.getTime()));
+
+			rs = ps.executeQuery();
+			rs.last();
+			int region = rs.getRow();
+
+			dsBean = new DiagnosisStatisticsBean(zipCode, local, region, lower, upper);
+			rs.close();
+			ps.close();
+			return dsBean;
+		} catch (SQLException e) {
+
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+
+	}
+
+	public DiagnosisStatisticsBean getDiagnosisCounts_country(String icdCode, String zipCode, java.util.Date lower, java.util.Date upper) throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		DiagnosisStatisticsBean dsBean = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT * FROM ovdiagnosis INNER JOIN officevisits ON ovdiagnosis.VisitID=officevisits.ID INNER JOIN patients ON officevisits.PatientID=patients.MID WHERE ICDCode=? AND zip=? AND visitDate >= ? AND visitDate <= ? ");
+			ps.setString(1, icdCode);
+			ps.setString(2, zipCode);
+			ps.setTimestamp(3, new Timestamp(lower.getTime()));
+			// add 1 day's worth to include the upper
+			ps.setTimestamp(4, new Timestamp(upper.getTime()));
+
+			ResultSet rs = ps.executeQuery();
+			rs.last();
+			int local = rs.getRow();
+			ps.close();
+			ps = conn.prepareStatement("SELECT * FROM ovdiagnosis INNER JOIN officevisits ON ovdiagnosis.VisitID=officevisits.ID INNER JOIN patients ON officevisits.PatientID=patients.MID WHERE ICDCode=? AND visitDate >= ? AND visitDate <= ? ");
+			ps.setString(1, icdCode);
+			//ps.setString(2, zipCode.substring(0, 3) + "%");
+			ps.setTimestamp(2, new Timestamp(lower.getTime()));
+			// add 1 day's worth to include the upper
+			ps.setTimestamp(3, new Timestamp(upper.getTime()));
+
+			rs = ps.executeQuery();
+			rs.last();
+			int region = rs.getRow();
+
+			dsBean = new DiagnosisStatisticsBean(zipCode, local, region, lower, upper);
+			rs.close();
+			ps.close();
+			return dsBean;
+		} catch (SQLException e) {
+
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+
+	}
 	/**
 	 * Gets a weekly local zip code count and regional count of a specified diagnosis code over a time period
 	 * 

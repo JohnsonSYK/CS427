@@ -67,6 +67,7 @@
 			<li><a href="/iTrust/auth/hcp-patient/messageInbox.jsp">Message Inbox</a>
 			<li><a href="/iTrust/auth/hcp-patient/messageOutbox.jsp">Message Outbox</a>
 		    <li><a href="/iTrust/auth/hcp-uap/showEmailHistory.jsp">Email History</a>
+			<li><a href="/iTrust/auth/hcp-patient/editFilter.jsp">Edit Message Filter</a>
 		</ul>
 	</div>
 </div>

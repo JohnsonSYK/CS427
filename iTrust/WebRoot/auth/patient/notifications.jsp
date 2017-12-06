@@ -35,7 +35,7 @@
         <h2>No reminders!!</h2>
     <% }
     else {
-        %> <table>
+        %> <table id="notificationTable">
         <tr><th>Subject</th> <th>Username</th> <th>Timestamp</th> <th>Link</th></tr>
     <%
             reminderBeans.sort(new Comparator<ReminderBean>() {
@@ -48,10 +48,10 @@
             for(ReminderBean bean : reminderBeans){
                 %>
                 <tr>
-                <td><%= bean.getSubject() %></td>
-                <td><%= userName %></td>
-                <td><%= bean.getSentTime().toString() %></td>
-                <td><a href="/iTrust/auth/patient/viewReminder.jsp?apptId=<%= bean.getReminderId()%>">Link</a></td>
+                    <td><%= bean.getSubject() %></td>
+                    <td><%= userName %></td>
+                    <td><%= bean.getSentTime().toString() %></td>
+                    <td><a class="reminderLink" href="/iTrust/auth/patient/viewReminder.jsp?apptId=<%= bean.getReminderId()%>">Link</a></td>
                 </tr>
                         <%
             }

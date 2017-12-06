@@ -26,16 +26,4 @@ String chartTitle = "Diagnosis Cases Chart";
 
 %>
 
-<!-- The cewolf:chart tag defines attributes related to the chart you wish to generate -->
-<cewolf:chart
-     id="graph"
-     title="<%= StringEscapeUtils.escapeHtml(chartTitle ) %>"
-     type="verticalbar"
-     xaxislabel="Cases By Zipcode and Region">
-	<cewolf:data>
-	       <cewolf:producer id="DSchart2"/>
-	</cewolf:data>
-</cewolf:chart>
 
-<!-- The cewolf:img tag defines the actual chart in your JSP -->
-<cewolf:img chartid="graph" renderer="/charts/" width="600" height="400" border="2"/>
