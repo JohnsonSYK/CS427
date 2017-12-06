@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.List;
 
@@ -580,6 +581,28 @@ public class PersonnelDAO {
 					+ "WHERE specialty = 'Optometrist' or specialty = 'Ophthalmologist'; ");
 			ResultSet rs = ps.executeQuery();
 			List<PersonnelBean> loadList = personnelLoader.loadList(rs);
+			rs.close();
+			ps.close();
+			return loadList;
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+	}
+
+	public List<String> getAllUserRoles() throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT DISTINCT ROLE FROM users;");
+			ResultSet rs = ps.executeQuery();
+			List<String> loadList = new ArrayList<>();
+			while(rs.next()) {
+				loadList.add(rs.getString("role"));
+			}
 			rs.close();
 			ps.close();
 			return loadList;

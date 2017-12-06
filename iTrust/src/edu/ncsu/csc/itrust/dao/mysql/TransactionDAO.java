@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 import edu.ncsu.csc.itrust.DBUtil;
 import edu.ncsu.csc.itrust.beans.OperationalProfile;
@@ -206,13 +207,62 @@ public class TransactionDAO {
 			ps.setLong(4, dlhcpID);
 			ResultSet rs = ps.executeQuery();
 			List<TransactionBean> tbList = loader.loadList(rs);
-			
+
 			tbList = addAndSortRoles(tbList, patientID, getByRole);
 			rs.close();
 			ps.close();
 			return tbList;
 		} catch (SQLException e) {
-			
+
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+	}
+
+	public List<TransactionBean> getFilteredTransactions(String primaryRole, String secondaryRole, java.util.Date lower,
+												   java.util.Date upper, Optional<Long> transactionType) throws DBException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = factory.getConnection();
+			if(transactionType.isPresent()) {
+				ps = conn.prepareStatement("SELECT * FROM transactionlog tl " +
+						"JOIN users u1 ON tl.loggedInMID = u1.MID " +
+						"JOIN users u2 ON tl.secondaryMID = u2.MID WHERE " +
+								" u1.role=? " +
+								"AND u2.role=? " +
+								"AND tl.timeLogged >= ? " +
+								"AND tl.timeLogged <= ? " +
+								"AND transactionId = ? " +
+								"ORDER BY timeLogged DESC");
+				ps.setString(1, primaryRole);
+				ps.setString(2, secondaryRole);
+				ps.setTimestamp(3, new Timestamp(lower.getTime()));
+				ps.setTimestamp(4, new Timestamp(upper.getTime()));
+				ps.setLong(5, transactionType.get());
+			} else {
+				ps = conn.prepareStatement("SELECT * FROM transactionlog tl " +
+						"JOIN users u1 ON tl.loggedInMID = u1.MID " +
+						"JOIN users u2 ON tl.secondaryMID = u2.MID WHERE " +
+						" u1.role=? " +
+						"AND u2.role=? " +
+						"AND tl.timeLogged >= ? " +
+						"AND tl.timeLogged <= ? " +
+						"ORDER BY timeLogged DESC");
+				ps.setString(1, primaryRole);
+				ps.setString(2, secondaryRole);
+				ps.setTimestamp(3, new Timestamp(lower.getTime()));
+				ps.setTimestamp(4, new Timestamp(upper.getTime()));
+			}
+			ResultSet rs = ps.executeQuery();
+			List<TransactionBean> tbList = loader.loadList(rs);
+
+			rs.close();
+			ps.close();
+			return tbList;
+		} catch (SQLException e) {
+
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
