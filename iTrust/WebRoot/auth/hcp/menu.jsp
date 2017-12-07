@@ -155,6 +155,7 @@
 			<li><a href="/iTrust/auth/surveyResults.jsp">Satisfaction Survey Results</a>
 			<li><a href="/iTrust/auth/hcp/viewPrescriptionRenewalNeeds.jsp">Potential Prescription-Renewals</a>
 			<li><a href="/iTrust/auth/hcp/viewCauseDeath.jsp">View cause-of-death trends report</a>
+			<li><a href="/iTrust/auth/hcp/viewPrescriptionTrends.jsp">View prescription trends report</a>
 		</ul>
 	</div>
 </div>
