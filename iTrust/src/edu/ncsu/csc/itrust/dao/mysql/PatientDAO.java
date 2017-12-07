@@ -960,58 +960,13 @@ public class PatientDAO {
 		PreparedStatement ps = null;
 		try {
 			conn = factory.getConnection();
-			ps = conn.prepareStatement("SELECT * FROM patients WHERE preRegister = TRUE ");
+			ps = conn.prepareStatement("SELECT * FROM patients" +
+					"WHERE preRegister = TRUE AND DateOfDeactivation IS NULL ");
 			ResultSet rs = ps.executeQuery();
 			List<PatientBean> loadlist = patientLoader.loadList(rs);
 			rs.close();
 			ps.close();
 			return loadlist;
-		} catch (SQLException e) {
-			throw new DBException(e);
-		} finally {
-			DBUtil.closeConnection(conn, ps);
-		}
-	}
-
-	/**
-	 * Sets the preRegister boolean to FALSE for the patient with the given MID
-	 *
-	 * @param patientMID The MID of the patient to activate
-	 * @throws DBException
-	 */
-	public int activatePreRegisteredPatient(long patientMID) throws DBException {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			conn = factory.getConnection();
-			ps = conn.prepareStatement("UPDATE patients SET preRegister = FALSE WHERE PatientID = ? ");
-			ps.setLong(1, patientMID);
-			int numUpdated = ps.executeUpdate();
-			ps.close();
-			return numUpdated;
-		} catch (SQLException e) {
-			throw new DBException(e);
-		} finally {
-			DBUtil.closeConnection(conn, ps);
-		}
-	}
-
-	/**
-	 * Deletes the patient with the given MID
-	 *
-	 * @param patientMID The MID of the patient to delete
-	 * @throws DBException
-	 */
-	public int deletePatient(long patientMID) throws DBException {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			conn = factory.getConnection();
-			ps = conn.prepareStatement("DELETE FROM patients WHERE PatientID = ? ");
-			ps.setLong(1, patientMID);
-			int numUpdated = ps.executeUpdate();
-			ps.close();
-			return numUpdated;
 		} catch (SQLException e) {
 			throw new DBException(e);
 		} finally {
