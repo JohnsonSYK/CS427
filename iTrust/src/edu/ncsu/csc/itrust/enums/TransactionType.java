@@ -33,6 +33,10 @@ public enum TransactionType {
 	PATIENT_ACTIVATE(103, "Activate a patient", "activated your account", true),
 	/**PATIENT_PREREGISTER*/
 	PATIENT_PREREGISTER(104, "User preregistered as a patient", "preregistered as a patient", false),
+	/**PATIENT_PREREGISTER_ACTIVATE*/
+	PATIENT_PREREGISTER_ACTIVATE(105, "Activate preregistered patient", "activated your account", true),
+	/**PATIENT_PREREGISTER_DEACTIVATE*/
+	PATIENT_PREREGISTER_DEACTIVATE(106, "Deactivate preregistered patient", "deactivated your account", true),
 	/**LHCP_CREATE*/
 	LHCP_CREATE(200, "Create a LHCP", "created an LHCP", false),
 	/**LHCP_EDIT*/
