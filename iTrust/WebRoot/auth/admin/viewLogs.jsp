@@ -34,7 +34,7 @@
 </style>
 
 <%
-    pageTitle = "iTrust - Manage Wards";
+    pageTitle = "iTrust - View Transaction Logs";
 %>
 
 <%@include file="/header.jsp" %>
@@ -60,7 +60,6 @@
             if (transactionNum === "<%= selectAllString%>") {
                 delete obj.transactionNum;
             }
-            console.log(obj);
             return obj;
         }
 
@@ -69,7 +68,6 @@
                 url : "/iTrust/auth/TransactionLogServlet",
                 data : obj,
                 success : function(e) {
-                    console.log(e);
                     $('#formDiv').addClass('hidden');
                     if(state === "row") {
                         showTable(e);
@@ -114,6 +112,9 @@
         function showCharts(data) {
             google.charts.load('current',{'packages':['bar']});
             google.charts.setOnLoadCallback(drawChart(data));
+            google.charts.setOnLoadCallback(drawChart2(data));
+            google.charts.setOnLoadCallback(drawChart3(data));
+            google.charts.setOnLoadCallback(drawChart4(data));
         }
 
         function drawChart(data) {
@@ -121,6 +122,34 @@
                 const loggedFreq = data.map(function(e) { return e.loggedInMID; });
                 drawSingleChart('loggedInMID', 'Frequency', loggedFreq, 'loggedInChart');
                 $('#barDiv').removeClass('hidden');
+            }
+        }
+
+        function drawChart2(data) {
+            return function() {
+                const loggedFreq = data.map(function(e) { return e.secondaryMID; });
+                drawSingleChart('secondaryMID', 'Frequency', loggedFreq, 'secondaryMIDChart');
+
+            }
+        }
+
+        function drawChart3(data) {
+            return function() {
+                const loggedFreq = data.map(function(e) { return e.timeLogged.split(','); });
+                var dateModified=[];
+                for (var i=loggedFreq.length-1; i>=0;i--){
+                    dateModified.push(loggedFreq[i][0].substr(0,3)+loggedFreq[i][1].substr(0,5));
+                }
+                drawSingleChart('timeLogged', 'Frequency', dateModified, 'timeLoggedChart');
+
+            }
+        }
+
+        function drawChart4(data) {
+            return function() {
+                const loggedFreq = data.map(function(e) { return e.transactionType; });
+                drawSingleChart('transactionType', 'Frequency', loggedFreq, 'transactionTypeMIDChart');
+
             }
         }
 
@@ -140,8 +169,7 @@
             var data = google.visualization.arrayToDataTable(dataTable);
             var options={
                 chart: {
-                    title: 'Trend Report',
-                    subtitle: 'Regional Count, State Count and Country Count'
+                    title: target
                 },
                 vAxis: {
                     minValue:0,
@@ -227,11 +255,14 @@
 
 </div>
 
-<div id="tableDiv" class="hidden">
+<div id="tableDiv" class="hidden" style="...">
     I am a table!
 </div>
 
 <div id="barDiv" class="hidden">
     <div id="loggedInChart" style="..."></div>
+    <div id="secondaryMIDChart" style="..."></div>
+    <div id="timeLoggedChart" style="..."></div>
+    <div id="transactionTypeMIDChart" style="..."></div>
 </div>
 <%@include file="/footer.jsp" %>
