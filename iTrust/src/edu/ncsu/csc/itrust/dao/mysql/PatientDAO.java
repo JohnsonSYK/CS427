@@ -960,7 +960,7 @@ public class PatientDAO {
 		PreparedStatement ps = null;
 		try {
 			conn = factory.getConnection();
-			ps = conn.prepareStatement("SELECT * FROM patients" +
+			ps = conn.prepareStatement("SELECT * FROM patients " +
 					"WHERE preRegister = TRUE AND DateOfDeactivation IS NULL ");
 			ResultSet rs = ps.executeQuery();
 			List<PatientBean> loadlist = patientLoader.loadList(rs);
