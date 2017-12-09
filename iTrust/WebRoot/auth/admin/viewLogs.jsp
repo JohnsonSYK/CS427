@@ -115,13 +115,13 @@
             google.charts.setOnLoadCallback(drawChart2(data));
             google.charts.setOnLoadCallback(drawChart3(data));
             google.charts.setOnLoadCallback(drawChart4(data));
+            $('#barDiv').removeClass('hidden');
         }
 
         function drawChart(data) {
             return function() {
                 const loggedFreq = data.map(function(e) { return e.loggedInMID; });
                 drawSingleChart('loggedInMID', 'Frequency', loggedFreq, 'loggedInChart');
-                $('#barDiv').removeClass('hidden');
             }
         }
 
@@ -178,7 +178,8 @@
                     }
                 },
                 bars:'vertical',
-                height: 400
+                height: 400,
+                width: $(window).width() * .65
             };
 
             var chart = new google.charts.Bar(document.getElementById(target));
@@ -260,9 +261,9 @@
 </div>
 
 <div id="barDiv" class="hidden">
-    <div id="loggedInChart" style="..."></div>
-    <div id="secondaryMIDChart" style="..."></div>
-    <div id="timeLoggedChart" style="..."></div>
-    <div id="transactionTypeMIDChart" style="..."></div>
+    <div class="chart" id="loggedInChart" style="..."></div>
+    <div class="chart" id="secondaryMIDChart" style="..."></div>
+    <div class="chart" id="timeLoggedChart" style="..."></div>
+    <div class="chart" id="transactionTypeMIDChart" style="..."></div>
 </div>
 <%@include file="/footer.jsp" %>

@@ -78,12 +78,7 @@ public class ReminderBean implements Serializable {
             return false;
         }
         ReminderBean oth = (ReminderBean)other;
-        return this.reminderId == oth.reminderId
-                && this.content.equals(oth.content)
-                && this.senderName.equals(oth.senderName)
-                && this.sentTime.equals(oth.sentTime)
-                && this.mid == oth.mid
-                && this.subject.equals(oth.subject);
+        return this.reminderId == oth.reminderId;
     }
 
 
