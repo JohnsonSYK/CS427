@@ -2,7 +2,6 @@ package edu.ncsu.csc.itrust.beans.loaders;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,26 +21,14 @@ public class PrescriptionBeanLoader implements BeanLoader<PrescriptionBean> {
 		medLoader = new MedicationBeanLoader();
 	}
 
-	/**
-	 * Returns list of prescription information based on executed query result
-	 * @param rs The java.sql.ResultSet we are extracting.
-	 * @return List of PrescriptionBean that are extracted
-	 * @throws SQLException
-	 */
 	public List<PrescriptionBean> loadList(ResultSet rs) throws SQLException {
-		ArrayList<PrescriptionBean> list = new ArrayList<PrescriptionBean>();
+		ArrayList<PrescriptionBean> list = new ArrayList<>();
 		while (rs.next()) {
 			list.add(loadSingle(rs));
 		}
 		return list;
 	}
 
-	/**
-	 * Return prescription information based on executed query result
- 	 * @param rs The java.sql.ResultSet to be loaded.
-	 * @return A single PrescriptionBean extracted
-	 * @throws SQLException
-	 */
 	public PrescriptionBean loadSingle(ResultSet rs) throws SQLException {
 		PrescriptionBean pres = new PrescriptionBean();
 		pres.setId(rs.getLong("ID"));
@@ -57,13 +44,6 @@ public class PrescriptionBeanLoader implements BeanLoader<PrescriptionBean> {
 		return pres;
 	}
 
-	/**
-	 * Load PrescriptionBean information to the PreparedStatement
-	 * @param ps The prepared statement to be loaded.
-	 * @param pres PrescriptionBean information
-	 * @return The newly loaded prepared statement
-	 * @throws SQLException
-	 */
 	public PreparedStatement loadParameters(PreparedStatement ps, PrescriptionBean pres) throws SQLException {
 		ps.setLong(1, pres.getVisitID());
 		ps.setString(2, pres.getMedication().getNDCode());

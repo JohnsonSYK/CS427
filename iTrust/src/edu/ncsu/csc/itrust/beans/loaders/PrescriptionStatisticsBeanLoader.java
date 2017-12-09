@@ -8,6 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A loader for PrescriptionStatisticsBeans.
+ *
+ * Loads in information to/from beans using ResultSets and PreparedStatements. Use the superclass to enforce consistency.
+ * For details on the paradigm for a loader (and what its methods do), see {@link BeanLoader}
+ */
 public class PrescriptionStatisticsBeanLoader {
 	public List<PrescriptionStatisticsBean> loadList(ResultSet rs) throws SQLException {
 		ArrayList<PrescriptionStatisticsBean> list = new ArrayList<>();
