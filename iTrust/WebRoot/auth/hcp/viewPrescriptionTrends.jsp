@@ -29,6 +29,7 @@
     PrescriptionsDAO preDAO = prodDAO.getPrescriptionsDAO();
     PersonnelDAO personDAO = prodDAO.getPersonnelDAO();
 
+    // Code for input validation
     Boolean allGood = true;
     String icdCode = request.getParameter("icdCode");
     String icdError = "";
@@ -145,6 +146,7 @@
         var table_data = [];
         <%
         for (PrescriptionStatisticsBean result : results) {
+        	// collect all needed information to display on table
             long pre_id = result.getPrescriptionID();
             PrescriptionBean prescript = preDAO.getByID(pre_id);
             OfficeVisitBean officeVisit = ovDAO.getOfficeVisit(result.getVisitID());

@@ -42,7 +42,7 @@ public class PrescriptionsDAO {
 		PreparedStatement ps = null;
 		try {
 			conn = factory.getConnection();
-			ps = conn.prepareStatement("Select * From ovmedication,ndcodes Where ovmedication.VisitID = ? "
+			ps = conn.prepareStatement("SELECT * FROM ovmedication,ndcodes WHERE ovmedication.VisitID = ? "
 					+ "AND ndcodes.Code=ovmedication.NDCode");
 			ps.setLong(1, visitID);
 			ResultSet rs = ps.executeQuery();
@@ -145,21 +145,15 @@ public class PrescriptionsDAO {
 		PreparedStatement ps = null;
 		try {
 			conn = factory.getConnection();
-			ps = conn.prepareStatement("Select * From ovmedication,ndcodes Where ovmedication.ID = ? "
+			ps = conn.prepareStatement("SELECT * FROM ovmedication,ndcodes WHERE ovmedication.ID = ? "
 				+ "AND ndcodes.Code=ovmedication.NDCode;");
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				PrescriptionBean prescription = loader.loadSingle(rs);
-				rs.close();
-				ps.close();
-				return prescription;
-			}
-			else{
-				rs.close();
-				ps.close();
-				return null;
-			}
+			PrescriptionBean prescription = (rs.next()) ? loader.loadSingle(rs) : null;
+			rs.close();
+			ps.close();
+			return prescription;
+
 		} catch (SQLException e) {
 			throw new DBException(e);
 		} finally {

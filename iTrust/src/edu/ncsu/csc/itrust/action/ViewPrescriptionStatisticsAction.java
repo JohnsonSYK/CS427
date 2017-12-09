@@ -19,6 +19,8 @@ import java.util.*;
 import java.util.Date;
 
 public class ViewPrescriptionStatisticsAction {
+	private static final String all = "All";
+
 	/** Database access methods for ICD codes (diagnoses) */
 	private ICDCodesDAO icdDAO;
 	/** Database access methods for patients information */
@@ -29,7 +31,6 @@ public class ViewPrescriptionStatisticsAction {
 	private NDCodesDAO ndDAO;
 	/** Database access methods for prescription information */
 	private PrescriptionsDAO pDAO;
-
 
 	/**
 	 * Database factory
@@ -60,20 +61,22 @@ public class ViewPrescriptionStatisticsAction {
 	 */
 	public List<OfficeVisitBean> getFilteredOfficeVisits(String icd_code, String target_gender, Date start_date, Date end_date) throws DBException{
 		List<OfficeVisitBean> officeVisits = ovDAO.getAllOfficeVisitsForDiagnosis(icd_code);
+		// Get distinct office visits based on visitID
 		Set<OfficeVisitBean> distinctOV = new HashSet<OfficeVisitBean>(officeVisits);
 
-		Integer counter = 0;
 		List <OfficeVisitBean> result = new ArrayList();
 		for (OfficeVisitBean officeVisit : distinctOV) {
 			Date date = officeVisit.getVisitDate();
 
+			//Filter out based on date
 			if (date.before(start_date) || end_date.before(date)) {
 				continue;
 			}
 
 			long p_id = officeVisit.getPatientID();
+			//Filter out based on gender
 			String gender = patientsDAO.getPatient(p_id).getGender().getName();
-			if (!target_gender.equals("All") && !(target_gender.equals(gender))){
+			if (!target_gender.equals(all) && !(target_gender.equals(gender))){
 				continue;
 			}
 			result.add(officeVisit);
@@ -91,11 +94,13 @@ public class ViewPrescriptionStatisticsAction {
 	public HashMap<String, Integer> getPrescriptionStatistics(List<OfficeVisitBean> officeVisits) throws DBException{
 		HashMap<String, Integer> result = new HashMap<>();
 		for (OfficeVisitBean officeVisit : officeVisits){
+			//get prescription information of current office visit
 			List<PrescriptionBean> curr_prescriptions = pDAO.getList(officeVisit.getVisitID());
 			List<String> ndcodes = new ArrayList<>();
 			for (PrescriptionBean prescription : curr_prescriptions) {
-				if (!ndcodes.contains(prescription.getMedication().getNDCode())) {
-					String ndcode = prescription.getMedication().getNDCode();
+				// Filter out duplicate medication in the same office visit
+				String ndcode = prescription.getMedication().getNDCode();
+				if (!ndcodes.contains(ndcode)) {
 					result.put(ndcode, (result.containsKey(ndcode) ? result.get(ndcode) + 1 : 1));
 					ndcodes.add(ndcode);
 				}
@@ -125,7 +130,7 @@ public class ViewPrescriptionStatisticsAction {
 	 * @param gender user selected
 	 * @param start_date user inputted
 	 * @param end_date user inputted
-	 * @return List of PrescriptionStatisticsBeans that stores necessary informations to recover the table
+	 * @return List of PrescriptionStatisticsBeans that stores necessary information to recover the table
 	 * @throws DBException
 	 */
 	public List<PrescriptionStatisticsBean> getTable(String icd_code, String gender, Date start_date, Date end_date) throws DBException {
@@ -134,14 +139,15 @@ public class ViewPrescriptionStatisticsAction {
 		PrescriptionStatisticsBeanLoader ploader = new PrescriptionStatisticsBeanLoader();
 		try {
 			conn = factory.getConnection();
-			if (gender.equals("All")) {
-				ps = conn.prepareStatement("SELECT officevisits.ID, ovdiagnosis.ICDCode, ovmedication.ID as mID " +
+			// Execute a SQL statement based on all information given
+			if (gender.equals(all)) {
+				ps = conn.prepareStatement("SELECT officevisits.ID, ovdiagnosis.ICDCode, ovmedication.ID AS mID " +
 					"FROM officevisits, ovdiagnosis, ovmedication, patients WHERE officevisits.ID=ovdiagnosis.VisitID " +
 					"AND officevisits.ID=ovmedication.VisitID AND patients.MID=officevisits.patientID AND ovdiagnosis.ICDCode=? " +
 					"AND officevisits.visitDate >= ? AND officevisits.VisitDate <= ?");
 
 			} else {
-				ps = conn.prepareStatement("SELECT officevisits.ID, ovdiagnosis.ICDCode, ovmedication.ID as mID " +
+				ps = conn.prepareStatement("SELECT officevisits.ID, ovdiagnosis.ICDCode, ovmedication.ID AS mID " +
 					"FROM officevisits, ovdiagnosis, ovmedication, patients WHERE officevisits.ID=ovdiagnosis.VisitID " +
 					"AND officevisits.ID=ovmedication.VisitID AND patients.MID=officevisits.patientID AND ovdiagnosis.ICDCode=? " +
 					"AND officevisits.visitDate >= ? AND officevisits.VisitDate <= ? AND patients.Gender = ?");
