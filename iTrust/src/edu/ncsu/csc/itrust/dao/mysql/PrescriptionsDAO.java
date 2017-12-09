@@ -134,6 +134,12 @@ public class PrescriptionsDAO {
 		}
 	}
 
+	/**
+	 * Get the prescription information based on known medication id
+	 * @param id The unique ID of medication to be found
+	 * @return the prescription bean
+	 * @throws DBException
+	 */
 	public PrescriptionBean getByID(long id) throws DBException{
 		Connection conn = null;
 		PreparedStatement ps = null;

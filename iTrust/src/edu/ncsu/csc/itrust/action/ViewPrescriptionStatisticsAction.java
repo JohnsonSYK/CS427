@@ -50,6 +50,15 @@ public class ViewPrescriptionStatisticsAction {
 		this.pDAO = factory.getPrescriptionsDAO();
 	}
 
+	/**
+	 * Filter Office visits based on user input
+	 * @param icd_code user selected
+	 * @param target_gender user selected
+	 * @param start_date user inputted
+	 * @param end_date user inputted
+	 * @return A list of non-duplicated OfficeVisitBean information to be processed
+	 * @throws DBException
+	 */
 	public List<OfficeVisitBean> getFilteredOfficeVisits(String icd_code, String target_gender, Date start_date, Date end_date) throws DBException{
 		List<OfficeVisitBean> officeVisits = ovDAO.getAllOfficeVisitsForDiagnosis(icd_code);
 		Set<OfficeVisitBean> distinctOV = new HashSet<OfficeVisitBean>(officeVisits);
@@ -74,8 +83,13 @@ public class ViewPrescriptionStatisticsAction {
 		return result;
 	}
 
+	/**
+	 * Get Prescription information based on filtered office visits
+	 * @param officeVisits office visits filtered (most likely using getFilteredOfficeVisits)
+	 * @return Hashmap of (ndcode:count occurrence) pair in the filtered office visits
+	 * @throws DBException
+	 */
 	public HashMap<String, Integer> getPrescriptionStatistics(List<OfficeVisitBean> officeVisits) throws DBException{
-
 		HashMap<String, Integer> result = new HashMap<>();
 		for (OfficeVisitBean officeVisit : officeVisits){
 			List<PrescriptionBean> curr_prescriptions = pDAO.getList(officeVisit.getVisitID());
@@ -91,20 +105,6 @@ public class ViewPrescriptionStatisticsAction {
 		return result;
 	}
 
-	public HashMap<String, List <Long> > getOfficeVisitsForPrescription(List<OfficeVisitBean> officeVisits) throws DBException {
-		HashMap<String, List <Long>> result = new HashMap<>();
-		for (OfficeVisitBean officeVisit : officeVisits){
-			List<PrescriptionBean> curr_prescriptions = pDAO.getList(officeVisit.getVisitID());
-			for (PrescriptionBean prescription : curr_prescriptions) {
-				String ndcode = prescription.getMedication().getNDCode();
-				List<Long> currOVs = (result.containsKey(ndcode) ? result.get(ndcode): new ArrayList<>());
-				if (!currOVs.contains(officeVisit.getVisitID()))
-					currOVs.add(officeVisit.getVisitID());
-				result.put(ndcode, currOVs);
-			}
-		}
-		return result;
-	}
 
 	private void setValues(PreparedStatement ps, String icd_code, Date start_date, Date end_date) throws SQLException{
 		ps.setString(1, icd_code);
@@ -118,6 +118,15 @@ public class ViewPrescriptionStatisticsAction {
 			ps.setNull(3, Types.DATE);
 	}
 
+	/**
+	 * Get the information from user inputs to be processed and stored in table format
+	 * @param icd_code user selected
+	 * @param gender user selected
+	 * @param start_date user inputted
+	 * @param end_date user inputted
+	 * @return List of PrescriptionStatisticsBeans that stores necessary informations to recover the table
+	 * @throws DBException
+	 */
 	public List<PrescriptionStatisticsBean> getTable(String icd_code, String gender, Date start_date, Date end_date) throws DBException {
 		Connection conn = null;
 		PreparedStatement ps = null;

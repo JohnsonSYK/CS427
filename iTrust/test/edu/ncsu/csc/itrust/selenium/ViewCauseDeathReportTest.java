@@ -20,10 +20,7 @@ public class ViewCauseDeathReportTest extends iTrustSeleniumTest {
     public void setUp() throws Exception {
         super.setUp();
         gen.clearAllTables();
-        gen.icd9cmCodes();
-        gen.hcp3();
-        gen.patient2();
-        gen.clearLoginFailures();
+        gen.standardData();
         driver = new HtmlUnitDriver();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
@@ -41,7 +38,7 @@ public class ViewCauseDeathReportTest extends iTrustSeleniumTest {
     public void testGenerateReport1() throws Exception {
         driver = (HtmlUnitDriver)login("9000000003", "pw");
         assertLogged(TransactionType.HOME_VIEW, 9000000003L, 0L, "");
-        driver.findElement(By.linkText("View cause-of-death trends report")).click();
+        driver.findElement(By.linkText("View Cause-of-Death Trends Report")).click();
         driver.findElement(By.name("startingYear")).sendKeys("1900");
         driver.findElement(By.name("endingYear")).sendKeys("2020");
         driver.findElement(By.name("fSubmit")).click();
@@ -62,12 +59,11 @@ public class ViewCauseDeathReportTest extends iTrustSeleniumTest {
     public void testGenerateReport2() throws Exception {
         driver = (HtmlUnitDriver)login("9000000003", "pw");
         assertLogged(TransactionType.HOME_VIEW, 9000000003L, 0L, "");
-        driver.findElement(By.linkText("View cause-of-death trends report")).click();
+        driver.findElement(By.linkText("View Cause-of-Death Trends Report")).click();
         driver.findElement(By.name("startingYear")).sendKeys("1900");
         driver.findElement(By.name("endingYear")).sendKeys("2000");
         driver.findElement(By.name("fSubmit")).click();
-        assertTrue(driver.getPageSource().contains("morgue"));
-        assertTrue(driver.getPageSource().contains("job"));
+        assertFalse(driver.getPageSource().contains("Diabetes"));
     }
 
     @After

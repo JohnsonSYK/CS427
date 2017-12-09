@@ -1,5 +1,13 @@
 package edu.ncsu.csc.itrust.beans;
 
+/**
+ * A bean for storing data about prescription statistics.
+ *
+ * A bean's purpose is to store data. Period. Little or no functionality is to be added to a bean
+ * (with the exception of minor formatting such as concatenating phone numbers together).
+ * A bean must only have Getters and Setters (Eclipse Hint: Use Source > Generate Getters and Setters.
+ * to create these easily)
+ */
 public class PrescriptionStatisticsBean {
 	private long visitID = 0L;
 	private String icdCode = "";
@@ -8,11 +16,6 @@ public class PrescriptionStatisticsBean {
 	public PrescriptionStatisticsBean() {
 	}
 
-	public PrescriptionStatisticsBean(long visitID, String icdCode, long prescriptionID) {
-		this.visitID = visitID;
-		this.icdCode = icdCode;
-		this.prescriptionID = prescriptionID;
-	}
 
 	public long getVisitID() {
 		return visitID;
