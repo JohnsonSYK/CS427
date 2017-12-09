@@ -19,7 +19,6 @@ import java.util.*;
 import java.util.Date;
 
 public class ViewPrescriptionStatisticsAction {
-	private int CAUSE_OF_DEATH_TARGET = 0;
 	/** Database access methods for ICD codes (diagnoses) */
 	private ICDCodesDAO icdDAO;
 	/** Database access methods for patients information */
@@ -105,17 +104,19 @@ public class ViewPrescriptionStatisticsAction {
 		return result;
 	}
 
-
+	/**
+	 * Sets the blanks in the given prepared statements with user-provided data
+	 * @param ps blank prepared statement
+	 * @param icd_code user selected
+	 * @param start_date user inputted
+	 * @param end_date user inputted
+	 * @return Filled-out prepared statement
+	 * @throws SQLException
+	 */
 	private void setValues(PreparedStatement ps, String icd_code, Date start_date, Date end_date) throws SQLException{
 		ps.setString(1, icd_code);
-		if (start_date != null)
-			ps.setDate(2, new java.sql.Date(start_date.getTime()));
-		else
-			ps.setNull(2, Types.DATE);
-		if (end_date != null)
-			ps.setDate(3, new java.sql.Date(end_date.getTime()));
-		else
-			ps.setNull(3, Types.DATE);
+		ps.setDate(2, new java.sql.Date(start_date.getTime()));
+		ps.setDate(3, new java.sql.Date(end_date.getTime()));
 	}
 
 	/**

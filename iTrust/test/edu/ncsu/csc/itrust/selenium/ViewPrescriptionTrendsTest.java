@@ -65,6 +65,7 @@ public class ViewPrescriptionTrendsTest extends iTrustSeleniumTest {
 		new Select(driver.findElement(By.name("icdCode"))).selectByVisibleText("250.10 - Diabetes with ketoacidosis");
 		new Select(driver.findElement(By.name("gender"))).selectByValue("Male");
 		driver.findElement(By.name("fSubmit")).click();
+		assertTrue(driver.getPageSource().contains("Error!"));
 		assertFalse(driver.getPageSource().contains("units"));
 		assertFalse(driver.getPageSource().contains("Kelly Doctor"));
 		assertFalse(driver.getPageSource().contains("Take twice daily"));
