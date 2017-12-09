@@ -37,11 +37,28 @@ public class TransactionSeleniumTest extends iTrustSeleniumTest {
 
     public void testNoCharts() {
         try {
-
             HtmlUnitDriver doctorDriver = (HtmlUnitDriver) iTrustSeleniumTest.login("90000000001", "pw");
             doctorDriver.get("/iTrust/auth/admin/viewLogs.jsp");
             assertEquals("iTrust - View Transaction Logs", doctorDriver.getTitle());
-            doctorDriver.findElementById("startDate").sendKeys("11/11/2011");
+            doctorDriver.findElementById("startDate").sendKeys("11/11/2000");
+            doctorDriver.findElementById("endDate").sendKeys("11/11/2003");
+            doctorDriver.findElementById("submitRow").click();
+            assertEquals("", doctorDriver.findElementById("barDiv").getAttribute("class"));
+            assertEquals("hidden", doctorDriver.findElementById("tableDiv").getAttribute("class"));
+            assertEquals("hidden", doctorDriver.findElementById("formDiv").getAttribute("class"));
+            List<WebElement> rows = doctorDriver.findElementsByCssSelector(".chart");
+            assertEquals(0, rows.size());
+            doctorDriver.close();
+        } catch (Exception e) {
+        }
+    }
+
+    public void testFourCharts() {
+        try {
+            HtmlUnitDriver doctorDriver = (HtmlUnitDriver) iTrustSeleniumTest.login("90000000001", "pw");
+            doctorDriver.get("/iTrust/auth/admin/viewLogs.jsp");
+            assertEquals("iTrust - View Transaction Logs", doctorDriver.getTitle());
+            doctorDriver.findElementById("startDate").sendKeys("11/11/2006");
             doctorDriver.findElementById("endDate").sendKeys("11/11/2016");
             doctorDriver.findElementById("submitRow").click();
             assertEquals("", doctorDriver.findElementById("barDiv").getAttribute("class"));
@@ -50,10 +67,7 @@ public class TransactionSeleniumTest extends iTrustSeleniumTest {
             List<WebElement> rows = doctorDriver.findElementsByCssSelector(".chart");
             assertEquals(4, rows.size());
             doctorDriver.close();
-
-
         } catch (Exception e) {
-
         }
     }
 

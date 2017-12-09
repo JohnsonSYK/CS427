@@ -50,11 +50,7 @@ public class TransactionLogServlet extends HttpServlet {
     }
 
     /**
-     * Services the request
-     * @param request,
-     * @param response, to be sent back
-     * @throws ServletException, if invalid request
-     * @throws IOException, if unable to write the request back
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

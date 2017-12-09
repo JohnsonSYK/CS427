@@ -220,6 +220,16 @@ public class TransactionDAO {
 		}
 	}
 
+	/**
+	 * return a list of transaction logs satisfying the parameter requirement.
+	 * @param primaryRole Primary role of transaction logs.
+	 * @param secondaryRole Secondary role of transaction logs.
+	 * @param lower	Lower date of a time period.
+	 * @param upper Upper date of a time period.
+	 * @param transactionType The type of desired transaction logs.
+	 * @return A list of transaction logs satisfying the input parameters.
+	 * @throws DBException
+	 */
 	public List<TransactionBean> getFilteredTransactions(String primaryRole, String secondaryRole, java.util.Date lower,
 												   java.util.Date upper, Optional<Long> transactionType) throws DBException {
 		Connection conn = null;

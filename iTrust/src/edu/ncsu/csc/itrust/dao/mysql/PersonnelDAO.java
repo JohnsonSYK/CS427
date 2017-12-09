@@ -591,6 +591,11 @@ public class PersonnelDAO {
 		}
 	}
 
+	/**
+	 * return all distinct user roles.
+	 * @return List of distinct user roles.
+	 * @throws DBException
+	 */
 	public List<String> getAllUserRoles() throws DBException {
 		Connection conn = null;
 		PreparedStatement ps = null;
