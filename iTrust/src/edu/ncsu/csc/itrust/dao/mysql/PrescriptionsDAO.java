@@ -133,4 +133,31 @@ public class PrescriptionsDAO {
 			DBUtil.closeConnection(conn, ps);
 		}
 	}
+
+	public PrescriptionBean getByID(long id) throws DBException{
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("Select * From ovmedication,ndcodes Where ovmedication.ID = ? "
+				+ "AND ndcodes.Code=ovmedication.NDCode;");
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				PrescriptionBean prescription = loader.loadSingle(rs);
+				rs.close();
+				ps.close();
+				return prescription;
+			}
+			else{
+				rs.close();
+				ps.close();
+				return null;
+			}
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+	}
 }

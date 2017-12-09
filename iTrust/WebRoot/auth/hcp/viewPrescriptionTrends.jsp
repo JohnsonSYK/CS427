@@ -1,20 +1,16 @@
 <%@taglib uri="/WEB-INF/tags.tld" prefix="itrust"%>
 <%@page errorPage="/auth/exceptionHandler.jsp"%>
 
-<%@page import="edu.ncsu.csc.itrust.beans.OfficeVisitBean"%>
-<%@page import="edu.ncsu.csc.itrust.dao.mysql.OfficeVisitDAO"%>
-<%@page import="edu.ncsu.csc.itrust.beans.PatientBean"%>
-<%@page import="edu.ncsu.csc.itrust.dao.mysql.PatientDAO"%>
 <%@page import="edu.ncsu.csc.itrust.enums.Gender"%>
-<%@page import="edu.ncsu.csc.itrust.dao.mysql.ICDCodesDAO"%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="javafx.util.Pair" %>
-<%@ page import="edu.ncsu.csc.itrust.beans.DiagnosisBean" %>
 <%@ page import="edu.ncsu.csc.itrust.action.*" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.ParseException" %>
+<%@ page import="edu.ncsu.csc.itrust.dao.mysql.*" %>
+<%@ page import="edu.ncsu.csc.itrust.beans.*" %>
 
 <%@include file="/global.jsp" %>
 
@@ -23,57 +19,58 @@
 %>
 
 <%@include file="/header.jsp" %>
+
 <%
+    ICDCodesDAO diagnoses = prodDAO.getICDCodesDAO();
+    NDCodesDAO ndDiagnoses = prodDAO.getNDCodesDAO();
+    PatientDAO patientDAO = prodDAO.getPatientDAO();
+    OfficeVisitDAO ovDAO = prodDAO.getOfficeVisitDAO();
+    PrescriptionsDAO preDAO = prodDAO.getPrescriptionsDAO();
+    PersonnelDAO personDAO = prodDAO.getPersonnelDAO();
+
+
     String icdCode = request.getParameter("icdCode");
     String gender = request.getParameter("gender");
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
 
     Boolean allGood = true;
     String d_left = request.getParameter("startDate");
     Date date_left = null;
-    if (!d_left.equals("")){
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    if (d_left != null && !d_left.equals("")){
+        DateFormat df = new SimpleDateFormat("MM/dd/yy");
         sdf.setLenient(false);
         try {
             date_left = df.parse(d_left);
         } catch (ParseException e) {
             allGood = false;
-        %> Error! First date format should be "yyyy-mm-dd" <br><%
+            %> Error! First date format should be "MM/dd/yy" <br><%
         }
     }
 
     String d_right = request.getParameter("endDate");
     Date date_right = null;
-    if (!d_right.equals("")){
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    if (d_right != null && !d_right.equals("")){
+        DateFormat df = new SimpleDateFormat("MM/dd/yy");
         sdf.setLenient(false);
         try {
             date_right = df.parse(d_right);
         } catch (ParseException e) {
             allGood = false;
-        %> Error! Second date format should be "yyyy-mm-dd" <br><%
+            %> Error! Second date format should be "MM/dd/yy" <br><%
         }
     }
-    if (date_right.after(date_left)) {
-        %> Error! Start Date must be before End Date <br><%
-    }
-
-    ViewPrescriptionStatisticsAction vsa = new ViewPrescriptionStatisticsAction(prodDAO);
-    List<OfficeVisitBean> officeVisits = vsa.getFilteredOfficeVisits(icdCode, gender, date_left, date_right);
-    HashMap<String, Integer> stats = vsa.getPrescriptionStatistics(officeVisits);
-    HashMap<String, List <Long>> ovDict = vsa.getOfficeVisitsForPrescription(officeVisits);
 
 %>
 
 
-
 <br />
-<form action="viewDiagnosisStatistics.jsp" method="post" id="formMain">
+<form action="viewPrescriptionTrends.jsp" method="post" id="formMain">
     <input type="hidden" name="viewSelect" value="trends" />
                 Diagnosis:
                 <select name="icdCode" >
                     <option value="">-- None Selected --</option>
-                    <%for(DiagnosisBean diag : diagnoses.getDiagnosisCodes()) { %>
+                    <%for(DiagnosisBean diag : diagnoses.getAllICDCodes()) { %>
                     <%if (diag.getICDCode().equals(icdCode)) { %>
                     <option selected="selected" value="<%=diag.getICDCode()%>"><%= StringEscapeUtils.escapeHtml("" + (diag.getICDCode())) %>
                         - <%= StringEscapeUtils.escapeHtml("" + (diag.getDescription())) %></option>
@@ -86,9 +83,9 @@
 
                 <br><br> Gender:
                 <select name="gender">
-                    <option value="all">all</option>
-                    <option value="male">male</option>
-                    <option value="female">female</option>
+                    <option value="All">All</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
                 </select>
 
                  <br><br> Start Date:
@@ -108,104 +105,129 @@
                 %> <input name="endDate"  size="10"> <%
                     } %>
                     <input type=button value="Select Date" onclick="displayDatePicker('endDate');">
-
+                <br><br>
+                <input type="submit" name ='fSubmit' value = "View Data">
+                <br><br>
 </form>
 
-<script type = "text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type = "text/javascript">
-    var region_array=[];
-    var state_array=[];
-    var country_array=[];
+<% if (request.getParameter("fSubmit") != null){
+    if (date_left != null && date_right != null && date_right.before(date_left)) {
+        %> Error! Something is wrong with your dates <br><%
+    } else {
+    ViewPrescriptionStatisticsAction vsa = new ViewPrescriptionStatisticsAction(prodDAO);
+    List<OfficeVisitBean> officeVisits = vsa.getFilteredOfficeVisits(icdCode, gender, date_left, date_right);
+    HashMap<String, Integer> stats = vsa.getPrescriptionStatistics(officeVisits);
 
-    <% for (int i=0;i<region_ds_bean.size();i++){%>
-    region_array.push("<%= region_ds_bean.get(i).getRegionStats()%>");
-    state_array.push("<%= state_ds_bean.get(i).getRegionStats()%>");
-    country_array.push("<%= country_ds_bean.get(i).getRegionStats()%>");
-    <%}%>
+    List<PrescriptionStatisticsBean> results = vsa.getTable(icdCode, gender, date_left, date_right);%>
 
-    var week_1=[];
-    week_1.push('Week -1');
-    week_1.push(parseInt(region_array[0]));
-    week_1.push(parseInt(state_array[0]));
-    week_1.push(parseInt(country_array[0]));
+    <style>
+        .google-visualization-table-td {
+            text-align: center !important;
+        }
+    </style>
 
-    var week_2=[];
-    week_2.push('Week -2');
-    week_2.push(parseInt(region_array[1]));
-    week_2.push(parseInt(state_array[1]));
-    week_2.push(parseInt(country_array[1]));
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['table']});
+        google.charts.setOnLoadCallback(drawTable);
+        var table_data = [];
+        <%
+        for (PrescriptionStatisticsBean result : results) {
+        	long pre_id = result.getPrescriptionID();
+            PrescriptionBean prescript = preDAO.getByID(pre_id);
+            OfficeVisitBean officeVisit = ovDAO.getOfficeVisit(result.getVisitID());
+            MedicationBean medBean = prescript.getMedication();
+            long HCP_id = officeVisit.getHcpID();
+            long P_id = officeVisit.getPatientID();
+            Date ov_date = officeVisit.getVisitDate();
+            Calendar ov_cal = Calendar.getInstance();
+            ov_cal.setTime(ov_date);
+            PersonnelBean personnel = personDAO.getPersonnel(HCP_id);
+            String HCP_name = personnel.getFirstName()+' '+personnel.getLastName();
+            PatientBean patient = patientDAO.getPatient(P_id);
+            String patient_name = patient.getFirstName()+' '+patient.getLastName();
+            String patient_gender = patient.getGender().getName();
+            String diagnosis  = diagnoses.getICDCode(result.getIcdCode()).getDescription();
+            MedicationBean medication = prescript.getMedication();
+            String medicationCode = medication.getNDCode();
+            String medicationName = medication.getDescription();
+            Date prescriptionStart = prescript.getStartDate();
+            Calendar start_cal = Calendar.getInstance();
+            ov_cal.setTime(prescriptionStart);
+            Date prescriptionEnd = prescript.getEndDate();
+            Calendar end_cal = Calendar.getInstance();
+            end_cal.setTime(prescriptionEnd);
+            int dosage = prescript.getDosage();
+            String instructions = prescript.getInstructions();
+    	%>
+        table_data.push([ <%= result.getVisitID() %> ,new Date (<%= ov_cal.get(Calendar.YEAR)%>, <%=ov_cal.get(Calendar.MONTH)%>, <%=ov_cal.get(Calendar.DAY_OF_MONTH) %>),
+            <%= HCP_id %> ,"<%= HCP_name %>" ,
+            <%= P_id %> ,"<%= patient_name %>","<%= patient_gender %>" ,"<%= result.getIcdCode() %>", "<%= (diagnosis==null || diagnosis.equals(""))? "Description not found" : diagnosis %>" ,
+            "<%= medicationCode %>" , "<%= medicationName %>" ,new Date (<%= start_cal.get(Calendar.YEAR)%>, <%=start_cal.get(Calendar.MONTH)%>, <%=start_cal.get(Calendar.DAY_OF_MONTH) %>) ,
+            new Date (<%= end_cal.get(Calendar.YEAR)%>, <%=end_cal.get(Calendar.MONTH)%>, <%=end_cal.get(Calendar.DAY_OF_MONTH) %>) ,
+                {v:<%= dosage %>,f:"<%=dosage%> units"},"<%= instructions %>"]);
+        <% }
+        %>
+        function drawTable() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Office Visit ID');
+            data.addColumn('date', 'Office Visit Date');
+            data.addColumn('number', 'HCP ID');
+            data.addColumn('string', 'HCP Name');
+            data.addColumn('number', 'Patient ID');
+            data.addColumn('string', 'Patient Name');
+            data.addColumn('string', 'Patient Gender');
+            data.addColumn('string', 'ICD Code');
+            data.addColumn('string', 'Diagnosis Name');
+            data.addColumn('string', 'ND Code');
+            data.addColumn('string', 'Medication Name');
+            data.addColumn('date', 'Medication Start Date');
+            data.addColumn('date', 'Medication End Date');
+            data.addColumn('number', 'Medication Dosage');
+            data.addColumn('string', 'Medication Instructions');
+            console.log(table_data);
+            data.addRows(table_data);
 
-    var week_3=[];
-    week_3.push('Week -3');
-    week_3.push(parseInt(region_array[2]));
-    week_3.push(parseInt(state_array[2]));
-    week_3.push(parseInt(country_array[2]));
+            var table = new google.visualization.Table(document.getElementById('table_div'));
 
-    var week_4=[];
-    week_4.push('Week -4');
-    week_4.push(parseInt(region_array[3]));
-    week_4.push(parseInt(state_array[3]));
-    week_4.push(parseInt(country_array[3]));
+            table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        }
+    </script> <div id="table_div" class = "google-visualization-table-td"></div>
 
-    var week_5=[];
-    week_5.push('Week -5');
-    week_5.push(parseInt(region_array[4]));
-    week_5.push(parseInt(state_array[4]));
-    week_5.push(parseInt(country_array[4]));
+    <script type = "text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        var stats_array = [['Medication', 'Frequency of prescriptions for given diagnosis', {role: 'style'}]];
+        <% List<String> colors = new ArrayList<>();
+        colors.add("#0303ec");
+        colors.add("#e90911");
+        colors.add("#fff60b");
+        colors.add("#19e42e");
+        colors.add("#8624d1");
+        int counter = 0;
+        for (String stat : stats.keySet()){
+            String icd = ndDiagnoses.getNDCode(stat).getDescription();%>
+            stats_array.push(["<%= stat + ": " + ((icd==null || icd.equals("")) ? "Description not found" : icd) %>",<%= 1.0*stats.get(stat)/officeVisits.size() %>, "<%= colors.get(counter % 5)%>"]);
+        <% counter ++;
+        }%>
+        function drawChart() {
 
-    var week_6=[];
-    week_6.push('Week -6');
-    week_6.push(parseInt(region_array[5]));
-    week_6.push(parseInt(state_array[5]));
-    week_6.push(parseInt(country_array[5]));
+            var data = google.visualization.arrayToDataTable(stats_array);
 
-    var week_7=[];
-    week_7.push('Week -7');
-    week_7.push(parseInt(region_array[6]));
-    week_7.push(parseInt(state_array[6]));
-    week_7.push(parseInt(country_array[6]));
+            var options = {
+                title: "Prescription Statistics",
+                chartArea: {width: "50%", height: "70%"},
+                legend: {position: "none"}
+            };
 
-    var week_8=[];
-    week_8.push('Week -8');
-    week_8.push(parseInt(region_array[7]));
-    week_8.push(parseInt(state_array[7]));
-    week_8.push(parseInt(country_array[7]));
+            var chart = new google.visualization.BarChart(document.getElementById('barchart'));
+            console.log('something happened');
+            chart.draw(data, options);
+        }
+    </script> <div id="barchart" style="width: 900px; height: 500px;"></div><%
+}}
 
-    google.charts.load('current',{'packages':['bar']});
-    google.charts.setOnLoadCallback(drawChart);
+%>
 
-    function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Week','Region Count','State Count','Country Count'],
-            week_8,
-            week_7,
-            week_6,
-            week_5,
-            week_4,
-            week_3,
-            week_2,
-            week_1
-        ]);
-        var options={
-            chart: {
-                title: 'Trend Report',
-                subtitle: 'Regional Count, State Count and Country Count'
-            },
-            vAxis: {
-                minValue:0,
-                viewWindow: {
-                    min: 0
-                }
-            },
-            bars:'vertical',
-            height: 400
-        };
-
-        var chart= new google.charts.Bar(document.getElementById('barchart_material'));
-
-        chart.draw(data,google.charts.Bar.convertOptions(options));
-    }
-
-</script>
 
 <%@include file="/footer.jsp" %>

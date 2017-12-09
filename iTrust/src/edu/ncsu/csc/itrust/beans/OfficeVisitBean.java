@@ -132,5 +132,11 @@ public class OfficeVisitBean {
 		this.isERIncident = isERIncident;
 	}
 
+	@Override
 	public int hashCode() {return Longs.hashCode(visitID);}
+
+	@Override
+	public boolean equals(Object ovb) {
+		return (ovb instanceof OfficeVisitBean && (((OfficeVisitBean)ovb).visitID == this.visitID));
+	}
 }
