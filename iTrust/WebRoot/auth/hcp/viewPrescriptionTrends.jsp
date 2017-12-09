@@ -123,6 +123,7 @@
 </form>
 <%=date_order_error%>
 <% if (request.getParameter("fSubmit") != null && allGood){
+    loggingAction.logEvent(TransactionType.VIEW_PRESCRIPTION_TRENDS, loggedInMID, 0, "");
     ViewPrescriptionStatisticsAction vsa = new ViewPrescriptionStatisticsAction(prodDAO);
     List<OfficeVisitBean> officeVisits = vsa.getFilteredOfficeVisits(icdCode, gender, date_left, date_right);
     HashMap<String, Integer> stats = vsa.getPrescriptionStatistics(officeVisits);
