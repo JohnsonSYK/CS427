@@ -26,25 +26,26 @@
         patientString = request.getParameter("patient");
     }
 
+    String sessionPid = (String) session.getAttribute("pid");
+
     String pidString;
     long pid = 0;
 
-    if (switchString.equals("true")) pidString = "";
-    else if (!patientString.equals("")) {
-
+    if (switchString.equals("true")) {
+        pidString = "";
+    } else if (!patientString.equals("")) {
         int patientIndex = Integer.parseInt(patientString);
         List<PatientBean> patients = (List<PatientBean>) session.getAttribute("patients");
         pid = patients.get(patientIndex).getMID();
         pidString = "" + pid;
         session.removeAttribute("patients");
         session.setAttribute("pid", pidString);
-    }
-    else {
-        if (session.getAttribute("pid") == null) {
+    } else {
+        if (sessionPid == null) {
             pid = 0;
             pidString = "";
         } else {
-            pid = (long) Long.parseLong((String) session.getAttribute("pid"));
+            pid = Long.parseLong(sessionPid);
             pidString = ""+pid;
         }
     }
