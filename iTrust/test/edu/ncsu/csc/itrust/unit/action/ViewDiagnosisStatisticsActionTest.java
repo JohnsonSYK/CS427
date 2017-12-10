@@ -1,5 +1,6 @@
 package edu.ncsu.csc.itrust.unit.action;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -41,6 +42,24 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 		assertEquals(2, dsBean.getZipStats());
 		assertEquals(5, dsBean.getRegionStats());
 	}
+
+	public void testGetDiagnosisStatisticsRegionValid() throws Exception {
+		ArrayList<DiagnosisStatisticsBean> dsBean = action.getDiagnosisStatistics_region("11/15/2017", "487.00", "27606-1234");
+		assertEquals(84, dsBean.get(0).getZipStats());
+		assertEquals(120, dsBean.get(0).getRegionStats());
+	}
+
+	public void testGetDiagnosisStatisticsCountryValid() throws Exception {
+		ArrayList<DiagnosisStatisticsBean> dsBean = action.getDiagnosisStatistics_country("11/15/2017", "487.00", "27606-1234");
+		assertEquals(84, dsBean.get(0).getZipStats());
+		assertEquals(120, dsBean.get(0).getRegionStats());
+	}
+
+	public void testGetDiagnosisStatisticsStateValid() throws Exception {
+		ArrayList<DiagnosisStatisticsBean> dsBean = action.getDiagnosisStatistics_state("11/15/2017", "487.00", "27606-1234");
+		assertEquals(84, dsBean.get(0).getZipStats());
+		assertEquals(120, dsBean.get(0).getRegionStats());
+	}
 	
 	public void testGetDiagnosisStatisticsValidNull() throws Exception {
 		DiagnosisStatisticsBean dsBean = action.getDiagnosisStatistics(null, null, "487.00", "27606");
@@ -74,7 +93,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
-			assertEquals("Zip Code must be 5 digits!", e.getErrorList().get(0));
+			assertEquals("Zip Code must be 5 digits or 5 digits and the 4 digit extension!", e.getErrorList().get(0));
 		}
 	}
 	
