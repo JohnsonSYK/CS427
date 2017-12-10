@@ -11,6 +11,9 @@ import edu.ncsu.csc.itrust.beans.PrescriptionBean;
 public class PrescriptionBeanTest extends TestCase {
 
 	private PrescriptionBean pres;
+	/**
+	 * Sets up defaults
+	 */
 	@Override
 	protected void setUp() throws Exception {
 		pres = new PrescriptionBean();

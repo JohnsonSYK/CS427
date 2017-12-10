@@ -154,7 +154,8 @@
 		    <li><a href="/iTrust/auth/staff/editPersonnel.jsp">UAPs</a>
 			<li><a href="/iTrust/auth/surveyResults.jsp">Satisfaction Survey Results</a>
 			<li><a href="/iTrust/auth/hcp/viewPrescriptionRenewalNeeds.jsp">Potential Prescription-Renewals</a>
-			<li><a href="/iTrust/auth/hcp/viewCauseDeath.jsp">View cause-of-death trends report</a>
+			<li><a href="/iTrust/auth/hcp/viewCauseDeath.jsp">View Cause-of-Death Trends Report</a>
+			<li><a href="/iTrust/auth/hcp/viewPrescriptionTrends.jsp">View Prescription Trends Report</a>
 		</ul>
 	</div>
 </div>
