@@ -121,6 +121,7 @@ public class EditPatientAction extends PatientBaseAction {
 		PatientBean p=patientDAO.getPatient(this.getPid());
 		p.setMID(pid);
 		p.setDateOfDeactivationStr(null);
+		p.setPreRegister(false);
 		patientDAO.editPatient(p, loggedInMID);
 	}
 	
