@@ -366,6 +366,18 @@
 		<servlet-name>AppointmentDayServlet</servlet-name>
 		<url-pattern>/auth/AppointmentDayServlet</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<description>
+		</description>
+		<display-name>TransactionLogServlet</display-name>
+		<servlet-name>TransactionLogServlet</servlet-name>
+		<servlet-class>edu.ncsu.csc.itrust.server.TransactionLogServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TransactionLogServlet</servlet-name>
+		<url-pattern>/auth/TransactionLogServlet</url-pattern>
+	</servlet-mapping>
 	
     <servlet>
 		<description>
