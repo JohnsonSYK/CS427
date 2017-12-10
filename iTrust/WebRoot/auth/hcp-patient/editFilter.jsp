@@ -147,7 +147,7 @@
     }
 
     if(date_left!=null){
-        String inputString = "1990-01-01";
+        String inputString = "1970-01-01";
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         Date early = dateFormat.parse(inputString);
         if(date_left.compareTo(early)<0){
