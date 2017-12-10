@@ -93,32 +93,24 @@ public class ViewDiagnosisStatisticsAction {
 		
 		return dsBean;
 	}
-
+	/**
+	 * Gets the counts of country diagnoses for the specified input
+	 *
+	 * @param upperDate The ending date for the time range
+	 * @param icdCode The diagnosis code to examine
+	 * @param zip The zip code to examine
+	 * @return A bean containing the local and regional counts
+	 * @throws FormValidationException
+	 * @throws ITrustException
+	 */
 	public ArrayList<DiagnosisStatisticsBean> getDiagnosisStatistics_country(String upperDate, String icdCode, String zip) throws FormValidationException, ITrustException {
 		ArrayList<DiagnosisStatisticsBean> dsBeanList = new ArrayList<>();
 		try {
 
-			if (upperDate == null || icdCode == null)
-				return null;
-
-			//Here "upper" is the date that count to, "startDate" is the date count from, will be both use in the function below.
-			Date upper = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
-			Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(upper);
-			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-			if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
-				throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
-
-			boolean validCode = false;
-			for(DiagnosisBean diag : getDiagnosisCodes()) {
-				if (diag.getICDCode().equals(icdCode))
-					validCode = true;
-			}
-			if (validCode == false) {
-				throw new FormValidationException("ICDCode must be valid diagnosis!");
-			}
+			Calendar cal = getCalendar(upperDate, icdCode, zip);
+			Date upper;
+			Date startDate;
+			if (cal == null) return null;
 
 			for (int i=0;i<=7;i++){
 				upper=cal.getTime();
@@ -137,30 +129,60 @@ public class ViewDiagnosisStatisticsAction {
 		return dsBeanList;
 	}
 
+	/**
+	 * Gets the desired calender.
+	 *
+	 * @param upperDate The ending date for the time range
+	 * @param icdCode The diagnosis code to examine
+	 * @param zip The zip code to examine
+	 * @return A bean containing the local and regional counts
+	 * @throws FormValidationException
+	 * @throws ITrustException
+	 * @throws ParseException
+	 */
+	private Calendar getCalendar(String upperDate, String icdCode, String zip) throws ParseException, FormValidationException, ITrustException {
+		if (upperDate == null || icdCode == null)
+			return null;
+
+		//Here "upper" is the date that count to, "startDate" is the date count from, will be both use in the function below.
+		Date upper = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
+		Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(upper);
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+		if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
+            throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
+
+		boolean validCode = false;
+		for(DiagnosisBean diag : getDiagnosisCodes()) {
+            if (diag.getICDCode().equals(icdCode))
+                validCode = true;
+        }
+		if (validCode == false) {
+            throw new FormValidationException("ICDCode must be valid diagnosis!");
+        }
+		return cal;
+	}
+
+	/**
+	 * Gets the counts of region diagnoses for the specified input
+	 *
+	 * @param upperDate The ending date for the time range
+	 * @param icdCode The diagnosis code to examine
+	 * @param zip The zip code to examine
+	 * @return A bean containing the local and regional counts
+	 * @throws FormValidationException
+	 * @throws ITrustException
+	 */
 	public ArrayList<DiagnosisStatisticsBean> getDiagnosisStatistics_region(String upperDate, String icdCode, String zip) throws FormValidationException, ITrustException {
 		ArrayList<DiagnosisStatisticsBean> dsBeanList = new ArrayList<>();
 		try {
 
-			if (upperDate == null || icdCode == null)
-				return null;
-
-			Date upper = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
-			Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(upper);
-			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-			if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
-				throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
-
-			boolean validCode = false;
-			for(DiagnosisBean diag : getDiagnosisCodes()) {
-				if (diag.getICDCode().equals(icdCode))
-					validCode = true;
-			}
-			if (validCode == false) {
-				throw new FormValidationException("ICDCode must be valid diagnosis!");
-			}
+			Calendar cal = getCalendar(upperDate, icdCode, zip);
+			Date upper;
+			Date startDate;
+			if (cal == null) return null;
 
 			for (int i=0;i<=7;i++){
 				upper=cal.getTime();
@@ -178,30 +200,24 @@ public class ViewDiagnosisStatisticsAction {
 		return dsBeanList;
 	}
 
+	/**
+	 * Gets the counts of state diagnoses for the specified input
+	 *
+	 * @param upperDate The ending date for the time range
+	 * @param icdCode The diagnosis code to examine
+	 * @param zip The zip code to examine
+	 * @return A bean containing the local and regional counts
+	 * @throws FormValidationException
+	 * @throws ITrustException
+	 */
 	public ArrayList<DiagnosisStatisticsBean> getDiagnosisStatistics_state(String upperDate, String icdCode, String zip) throws FormValidationException, ITrustException {
 		ArrayList<DiagnosisStatisticsBean> dsBeanList = new ArrayList<>();
 		try {
 
-			if (upperDate == null || icdCode == null)
-				return null;
-
-			Date upper = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
-			Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(upperDate);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(upper);
-			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-			if (!zip.matches("([0-9]{5})|([0-9]{5}-[0-9]{4})"))
-				throw new FormValidationException("Zip Code must be 5 digits or 5 digits and the 4 digit extension!");
-
-			boolean validCode = false;
-			for(DiagnosisBean diag : getDiagnosisCodes()) {
-				if (diag.getICDCode().equals(icdCode))
-					validCode = true;
-			}
-			if (validCode == false) {
-				throw new FormValidationException("ICDCode must be valid diagnosis!");
-			}
+			Calendar cal = getCalendar(upperDate, icdCode, zip);
+			Date upper;
+			Date startDate;
+			if (cal == null) return null;
 
 			for (int i=0;i<=7;i++){
 				upper=cal.getTime();
