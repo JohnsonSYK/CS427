@@ -11,6 +11,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.text.DateFormat" %>
+<%@ page import="java.util.Calendar" %>
 <%@ page import="java.text.ParseException" %>
 <%@ page import="edu.ncsu.csc.itrust.dao.mysql.PersonnelDAO" %>
 <%@ page import="edu.ncsu.csc.itrust.dao.mysql.PatientDAO" %>
@@ -23,15 +24,16 @@
     FilterBean cur = efa.pullCurrent();
     Boolean isNull = (cur == null);
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 %>
 <%@include file="/header.jsp" %>
 <form action="editFilter.jsp" method="post" name="FilterForm">
     Sender/Receiver: <input type="text" name="sender"
         <%
             if (!isNull  && cur.getSender() != null && !cur.getSender().equals("")){
-                %>
-                value="<%=cur.getSender()%>"<%
-            }
+        %>
+                            value="<%=cur.getSender()%>"<%
+    }
 
 %>/> <br>
     Subject: <input type="text" name="subject"
@@ -58,22 +60,23 @@
     }
 
 %>/> <br>
-    Starting Date: <input type="text" name="date_left"
-        <%
-            if (!isNull && cur.getDate_left() != null){
-        %>
-                          value="<%=sdf.format(cur.getDate_left())%>"<%
-    }
 
-%>/> <br>
+
+    Starting Date: <input type="text" name="date_left"
+
+        <%
+            if (!isNull && cur.getDate_left() != null) {
+        %>
+                          value="<%=sdf.format(cur.getDate_left())%>"<%}%>/>
+    <input type=button value="Select Date" onclick="displayDatePicker('date_left');"> <br>
+
+
     Ending Date: <input type="text" name="date_right"
         <%
-            if (!isNull && cur.getDate_right() != null){
+            if (!isNull && cur.getDate_right() != null) {
         %>
-                        value="<%=sdf.format(cur.getDate_right())%>"<%
-    }
-
-%>/> <br>
+                        value="<%=sdf.format(cur.getDate_right())%>"<%}%>/>
+    <input type=button value="Select Date" onclick="displayDatePicker('date_right');"> <br>
     <input type="submit" name="cSubmit" value="Cancel">
     <input type="submit" name="fSubmit" value="Save Filter">
     <input type="submit" name="tSubmit" value="Test Search">
@@ -103,103 +106,137 @@
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             sdf.setLenient(false);
             try {
-                date_left = df.parse(d_left);
-            } catch (ParseException e) {
-                allGood = false;
-                %> Error! First date format should be "yyyy-mm-dd" <br><%
-            }
-
-        }
-
-        String d_right = request.getParameter("date_right");
-        Date date_right = null;
-        if (!d_right.equals("")){
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            sdf.setLenient(false);
-            try {
-                date_right = df.parse(d_right);
-            } catch (ParseException e) {
-                allGood = false;
-            %> Error! Second date format should be "yyyy-mm-dd" <br><%
+                String[] s1 = d_left.split("/",0);
+                String dl = d_left;
+                if(s1.length==3) {
+                    dl = s1[2] + "-" + s1[0] + "-" + s1[1];
                 }
+                date_left = df.parse(dl);
+            } catch (ParseException e) {
+                allGood = false;
+%> Error! First date format should be "yyyy-mm-dd"<br><%
+        }
 
-            }
-        if (isNull && allGood){
-            Boolean success = efa.addFilter(sender, subject, sub_pos, sub_neg, date_left, date_right);
-            if (success){
-                %> Success! <%
-                response.sendRedirect("editFilter.jsp");
-            }
-            else{
-                %> Error while adding a filter! Try again. <%
-            }
-        }
-        else if (allGood){
-            Boolean success = efa.updateFilter(sender, subject, sub_pos, sub_neg, date_left, date_right);
-            if (success){
-                %> Success <%
-            response.sendRedirect("editFilter.jsp");
-            }
-            else{
-                %> Error while updating the filter! Try again. <%
-            }
-        }
-        else {
-%> Error! Try again. <%
-            }
     }
-    else if (request.getParameter("tSubmit") != null){
-        Boolean allGood = true;
 
-                String sender = request.getParameter("sender");
-                if (sender.equals(""))
-                    sender = null;
-                String subject = request.getParameter("subject");
-                if (subject.equals(""))
-                    subject = null;
-                String sub_pos = request.getParameter("sub_pos");
-                if (sub_pos.equals(""))
-                    sub_pos = null;
-                String sub_neg = request.getParameter("sub_neg");
-                if (sub_neg.equals(""))
-                    sub_neg = null;
-                String d_left = request.getParameter("date_left");
-                Date date_left = null;
-                if (!d_left.equals("")){
-                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                    sdf.setLenient(false);
-                    try {
-                        date_left = df.parse(d_left);
-                    } catch (ParseException e) {
-                        allGood = false;
+    String d_right = request.getParameter("date_right");
+    Date date_right = null;
+    if (!d_right.equals("")){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
+        try {
+            String[] s2 = d_right.split("/",0);
+            String dr = d_right;
+            if(s2.length==3){
+                dr = s2[2]+"-"+s2[0]+"-"+s2[1];
+            }
+            date_right = df.parse(dr);
+        } catch (ParseException e) {
+            allGood = false;
+%> Error! Second date format should be "yyyy-mm-dd"<br><%
+        }
+
+    }
+
+    if(date_left!=null && date_right!=null){
+        if(date_left.compareTo(date_right)>0){
+            allGood=false;
+%> Error! First date is after second date <br><%
+
+        }
+    }
+
+    if(date_left!=null){
+        String inputString = "1990-01-01";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        Date early = dateFormat.parse(inputString);
+        if(date_left.compareTo(early)<0){
+        allGood=false;
+%> Error! First date cannot be that early <br><%
+        }
+    }
+
+    if(date_right!=null && date_right.compareTo(new Date())>0){
+        allGood=false;
+%> Error! Second date cannot be after today <br><%
+    }
+
+    if (isNull && allGood){
+        Boolean success = efa.addFilter(sender, subject, sub_pos, sub_neg, date_left, date_right);
+        if (success){
+%> Success! <%
+    response.sendRedirect("editFilter.jsp");
+}
+else{
+%> Error while adding a filter! Try again. <%
+    }
+}
+else if (allGood){
+    Boolean success = efa.updateFilter(sender, subject, sub_pos, sub_neg, date_left, date_right);
+    if (success){
+%> Success <%
+    response.sendRedirect("editFilter.jsp");
+}
+else{
+%> Error while updating the filter! Try again. <%
+    }
+}
+else {
+%> Error! Try again. <%
+    }
+}
+else if (request.getParameter("tSubmit") != null){
+    Boolean allGood = true;
+
+    String sender = request.getParameter("sender");
+    if (sender.equals(""))
+        sender = null;
+    String subject = request.getParameter("subject");
+    if (subject.equals(""))
+        subject = null;
+    String sub_pos = request.getParameter("sub_pos");
+    if (sub_pos.equals(""))
+        sub_pos = null;
+    String sub_neg = request.getParameter("sub_neg");
+    if (sub_neg.equals(""))
+        sub_neg = null;
+    String d_left = request.getParameter("date_left");
+    Date date_left = null;
+    if (!d_left.equals("")){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
+        try {
+            date_left = df.parse(d_left);
+        } catch (ParseException e) {
+            allGood = false;
 %> Error! First date format should be "yyyy-mm-dd" <br><%
-                    }
-                }
+        }
+    }
 
-                String d_right = request.getParameter("date_right");
-                Date date_right = null;
-                if (!d_right.equals("")){
-                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                    sdf.setLenient(false);
-                    try {
-                        date_right = df.parse(d_right);
-                    } catch (ParseException e) {
-                        allGood = false;
+    String d_right = request.getParameter("date_right");
+    Date date_right = null;
+    if (!d_right.equals("")){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
+        try {
+            date_right = df.parse(d_right);
+        } catch (ParseException e) {
+            allGood = false;
 %> Error! Second date format should be "yyyy-mm-dd" <br><%
-                    }
+        }
 
-                }
+    }
 
-                if (allGood){
-                    FilterBean testFilter = new FilterBean();
-                    testFilter.setMid(loggedInMID);
-                    testFilter.setSender(sender);
-                    testFilter.setSubject(subject);
-                    testFilter.setSubstring_pos(sub_pos);
-                    testFilter.setSubstring_neg(sub_neg);
-                    testFilter.setDate_left(date_left);
-                    testFilter.setDate_right(date_right);
-                    %>
+    if (allGood){
+        FilterBean testFilter = new FilterBean();
+        testFilter.setMid(loggedInMID);
+        testFilter.setSender(sender);
+        testFilter.setSubject(subject);
+        testFilter.setSubstring_pos(sub_pos);
+        testFilter.setSubstring_neg(sub_neg);
+        testFilter.setDate_left(date_left);
+        testFilter.setDate_right(date_right);
+%>
 <script src="/iTrust/DataTables/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     jQuery.fn.dataTableExt.oSort['lname-asc']  = function(x,y) {
@@ -309,7 +346,7 @@
     <i>You have no messages</i>
 </div>
 <%	    }
-        }
-    }
+}
+}
 %>
 <%@include file="/footer.jsp" %>
