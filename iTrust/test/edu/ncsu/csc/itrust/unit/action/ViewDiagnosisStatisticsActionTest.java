@@ -93,7 +93,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsRegionInvalidDate() throws Exception {
 		try {
-			action.getDiagnosisStatistics_region("09-28/2011", "487.00", "27606");
+			action.getDiagnosisStatistics_region("09282011", "487.00", "27606");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
@@ -103,7 +103,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsStateInvalidDate() throws Exception {
 		try {
-			action.getDiagnosisStatistics_state("09-28/2011", "487.00", "27606");
+			action.getDiagnosisStatistics_state("2011-09-08", "487.00", "27606");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
@@ -113,7 +113,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsCountryInvalidDate() throws Exception {
 		try {
-			action.getDiagnosisStatistics_country("09-28/2011", "487.00", "27606");
+			action.getDiagnosisStatistics_country("09-28-2011", "487.00", "27606");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
@@ -143,7 +143,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsRegionInvalidZip() throws Exception {
 		try {
-			action.getDiagnosisStatistics_region("09/28/2011", "487.00", "2766");
+			action.getDiagnosisStatistics_region("01/01/2001", "487.00", "7766");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
@@ -153,7 +153,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsStateInvalidZip() throws Exception {
 		try {
-			action.getDiagnosisStatistics_state("09/28/2011", "487.00", "2766");
+			action.getDiagnosisStatistics_state("03/22/1995", "487.00", "2765");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
@@ -163,7 +163,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsCountryInvalidZip() throws Exception {
 		try {
-			action.getDiagnosisStatistics_country("09/28/2011", "487.00", "2766");
+			action.getDiagnosisStatistics_country("09/08/2015", "487.00", "2566");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
@@ -183,7 +183,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsRegionInvalidICDCode() throws Exception {
 		try {
-			action.getDiagnosisStatistics_region("09/28/2011", "11114.00", "27606");
+			action.getDiagnosisStatistics_region("05/12/2012", "19707.00", "27606");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
@@ -193,7 +193,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsStateInvalidICDCode() throws Exception {
 		try {
-			action.getDiagnosisStatistics_state("09/28/2011", "11114.00", "27606");
+			action.getDiagnosisStatistics_state("03/28/2011", "12345.00", "27606");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
@@ -203,7 +203,7 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 
 	public void testGetDiagnosisStatisticsCountryInvalidICDCode() throws Exception {
 		try {
-			action.getDiagnosisStatistics_country("09/28/2011", "11114.00", "27606");
+			action.getDiagnosisStatistics_country("09/28/2017", "15352.00", "27606");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());

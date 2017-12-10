@@ -56,7 +56,7 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		} catch (NoSuchElementException d) {
 			assertNull(elem);
 		}
-		//assertFalse(isElementPresent(By.id("diagnosisStatisticsTable")));
+
 		new Select(driver.findElement(By.name("viewSelect"))).selectByValue("trends");
 		driver.findElement(By.id("select_View")).click();
 		new Select(driver.findElement(By.name("icdCode"))).selectByVisibleText("72.00 - Mumps");
@@ -67,20 +67,7 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		//driver.findElement(By.name("endDate")).clear();
 		//driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
 		driver.findElement(By.id("select_diagnosis")).click();
-		/*
-		try {
-			elem = driver.findElement(By.id("diagnosisStatisticsTable"));
-			assertTrue(elem != null);
-		} catch (NoSuchElementException d) {
-			fail("Element should be present");
-		}
-		//assertTrue(isElementPresent(By.id("diagnosisStatisticsTable")));
-		WebElement zip = elem.findElements(By.tagName("td")).get(2);
-		// I know this is a stupid assert. This is how it was originally
-		assertTrue(zip.getText().contains("0"));
-		WebElement region = elem.findElements(By.tagName("td")).get(3);
-		assertTrue(region.getText().contains("2"));
-		*/
+
 	}
 
 	/*
@@ -150,71 +137,11 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		driver.findElement(By.name("zipCode")).sendKeys("27695");
 		driver.findElement(By.name("startDate")).clear();
 		driver.findElement(By.name("startDate")).sendKeys("11/15/2017");
-		//driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
 		driver.findElement(By.id("select_diagnosis")).click();
 		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
 		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
 
-		/*
-		WebElement table = driver.findElement(By.id("diagnosisStatisticsTable"));
-		long local1 = Long.parseLong(table.findElements(By.tagName("td")).get(2).getText());
-		long region1 = Long.parseLong(table.findElements(By.tagName("td")).get(3).getText());
-		
-		// Click Document Office Visit
-		driver.findElement(By.xpath("//div[@id='iTrustMenu']/div/div[3]/div/h2")).click();
-		driver.findElement(By.linkText("Document Office Visit")).click();
 
-		// Search and choose patient 25
-		//search for patient 25 by MID
-		driver.findElement(By.name("UID_PATIENTID")).sendKeys("25");
-		
-		//the button to click should have the text of the MID
-		driver.findElement(By.cssSelector("input[value='25']")).submit();
-
-		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-uap/documentOfficeVisit.jsp"));
-		assertTrue(driver.getPageSource().contains("Click on an old office visit to modify:"));
-
-		// Click "Yes, Document Office Visit"
-		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
-
-		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-uap/editOfficeVisit.jsp"));
-
-		driver.findElement(By.name("visitDate")).clear();
-		driver.findElement(By.name("visitDate")).sendKeys("09/28/2011");
-		driver.findElement(By.name("notes")).clear();
-		driver.findElement(By.name("notes")).sendKeys("I like diet-coke");
-		driver.findElement(By.id("update")).click();
-		assertTrue(driver.getPageSource().contains("Information Successfully Updated"));
-		assertLogged(TransactionType.OFFICE_VISIT_CREATE, 9000000008L, 25L, "Office visit");
-
-		new Select(driver.findElement(By.name("ICDCode"))).selectByVisibleText("487.00 - Influenza");
-		driver.findElement(By.id("add_diagnosis")).click();
-		assertTrue(driver.getPageSource().contains("Diagnosis information successfully updated."));
-
-		driver.findElement(By.cssSelector("h2.panel-title")).click();
-		driver.findElement(By.xpath("//div[@class='panel-body']/ul/li[2]")).click();
-		driver.findElement(By.linkText("Diagnosis Trends")).click();
-
-		// View Trend again
-		new Select(driver.findElement(By.name("viewSelect"))).selectByValue("trends");
-		driver.findElement(By.id("select_View")).click();
-		new Select(driver.findElement(By.name("icdCode"))).selectByVisibleText("487.00 - Influenza");
-		driver.findElement(By.name("zipCode")).clear();
-		driver.findElement(By.name("zipCode")).sendKeys("27606-1234");
-		driver.findElement(By.name("startDate")).clear();
-		driver.findElement(By.name("startDate")).sendKeys("08/28/2011");
-		driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
-		driver.findElement(By.id("select_diagnosis")).click();
-		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
-		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
-
-		WebElement table2 = driver.findElement(By.id("diagnosisStatisticsTable"));
-		long local2 = Long.parseLong(table2.findElements(By.tagName("td")).get(2).getText());
-		long region2 = Long.parseLong(table2.findElements(By.tagName("td")).get(3).getText());
-
-		assertEquals(local1 + 1, local2);
-		assertEquals(region1 + 1, region2);
-		*/
 	}
 
 	/*
@@ -244,7 +171,6 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		driver.findElement(By.name("zipCode")).sendKeys("276");
 		driver.findElement(By.name("startDate")).clear();
 		driver.findElement(By.name("startDate")).sendKeys("08/28/2011");
-		//driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
 		driver.findElement(By.id("select_diagnosis")).click();
 		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
 		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
@@ -285,7 +211,6 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		driver.findElement(By.name("zipCode")).sendKeys("27519");
 		driver.findElement(By.name("startDate")).clear();
 		driver.findElement(By.name("startDate")).sendKeys("09-28/2011");
-		//driver.findElement(By.name("endDate")).sendKeys("08/28/2011");
 		driver.findElement(By.id("select_diagnosis")).click();
 		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
 		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
@@ -330,28 +255,10 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		driver.findElement(By.name("zipCode")).sendKeys("27695");
 		driver.findElement(By.name("startDate")).clear();
 		driver.findElement(By.name("startDate")).sendKeys("06/28/2011");
-		//driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
 		driver.findElement(By.id("select_diagnosis")).click();
 		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
 		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
-		/*
-		WebElement table = driver.findElement(By.id("diagnosisStatisticsTable"));
-		long region1 = Long.parseLong(table.findElements(By.tagName("td")).get(3).getText());
-		
-		new Select(driver.findElement(By.name("icdCode"))).selectByVisibleText("84.50 - Malaria");
-		driver.findElement(By.name("zipCode")).clear();
-		driver.findElement(By.name("zipCode")).sendKeys("27606");
-		driver.findElement(By.name("startDate")).clear();
-		driver.findElement(By.name("startDate")).sendKeys("06/28/2011");
-		//driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
-		driver.findElement(By.id("select_diagnosis")).click();
-		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
-		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
-		WebElement table2 = driver.findElement(By.id("diagnosisStatisticsTable"));
-		long region2 = Long.parseLong(table2.findElements(By.tagName("td")).get(3).getText());
-		
-		assertEquals(region1, region2);
-		*/
+
 	}
 	
 	/*
@@ -385,17 +292,10 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		driver.findElement(By.name("zipCode")).sendKeys("27519");
 		driver.findElement(By.name("startDate")).clear();
 		driver.findElement(By.name("startDate")).sendKeys("09/28/2011");
-		//driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
 		driver.findElement(By.id("select_diagnosis")).click();
 		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
 		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
-		/*
-		WebElement table = driver.findElement(By.id("diagnosisStatisticsTable"));
-		long local = Long.parseLong(table.findElements(By.tagName("td")).get(2).getText());
-		long region = Long.parseLong(table.findElements(By.tagName("td")).get(3).getText());
-		assertEquals(local, 0);
-		assertEquals(region, 0);
-		*/
+
 	}
 	
 	/*
@@ -429,17 +329,10 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		driver.findElement(By.name("zipCode")).sendKeys("27607");
 		driver.findElement(By.name("startDate")).clear();
 		driver.findElement(By.name("startDate")).sendKeys("08/28/2011");
-		//driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
 		driver.findElement(By.id("select_diagnosis")).click();
 		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
 		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
 
-		/*
-		WebElement table = driver.findElement(By.id("diagnosisStatisticsTable"));
-		long local = Long.parseLong(table.findElements(By.tagName("td")).get(2).getText());
-		long region = Long.parseLong(table.findElements(By.tagName("td")).get(3).getText());
-		assertTrue(local <= region);
-		*/
 	}
 
 	/*
@@ -472,7 +365,6 @@ public class ViewDiagnosisStatisticsTest extends iTrustSeleniumTest {
 		driver.findElement(By.name("zipCode")).sendKeys("27695");
 		driver.findElement(By.name("startDate")).clear();
 		driver.findElement(By.name("startDate")).sendKeys("06/28/2011");
-		//driver.findElement(By.name("endDate")).sendKeys("09/28/2011");
 		driver.findElement(By.id("select_diagnosis")).click();
 		assertTrue(driver.getCurrentUrl().equals(ADDRESS + "auth/hcp-pha/viewDiagnosisStatistics.jsp"));
 		assertLogged(TransactionType.DIAGNOSIS_TRENDS_VIEW, 9000000008L, 0L, "");
