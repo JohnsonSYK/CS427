@@ -65,6 +65,21 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 		DiagnosisStatisticsBean dsBean = action.getDiagnosisStatistics(null, null, "487.00", "27606");
 		assertEquals(null, dsBean);
 	}
+
+	public void testGetDiagnosisStatisticsRegionValidNull() throws Exception {
+		ArrayList<DiagnosisStatisticsBean> dsBean = action.getDiagnosisStatistics_region(null, "487.00", "27606");
+		assertEquals(null, dsBean);
+	}
+
+	public void testGetDiagnosisStatisticsCountryValidNull() throws Exception {
+		ArrayList<DiagnosisStatisticsBean> dsBean = action.getDiagnosisStatistics_country(null, "487.00", "27606");
+		assertEquals(null, dsBean);
+	}
+
+	public void testGetDiagnosisStatisticsStateValidNull() throws Exception {
+		ArrayList<DiagnosisStatisticsBean> dsBean = action.getDiagnosisStatistics_state(null, "487.00", "27606");
+		assertEquals(null, dsBean);
+	}
 	
 	public void testGetDiagnosisStatisticsInvalidDate() throws Exception {
 		try {
@@ -75,7 +90,36 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 			assertEquals("Enter dates in MM/dd/yyyy", e.getErrorList().get(0));
 		}
 	}
-	
+
+	public void testGetDiagnosisStatisticsRegionInvalidDate() throws Exception {
+		try {
+			action.getDiagnosisStatistics_region("09-28/2011", "487.00", "27606");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("Enter dates in MM/dd/yyyy", e.getErrorList().get(0));
+		}
+	}
+
+	public void testGetDiagnosisStatisticsStateInvalidDate() throws Exception {
+		try {
+			action.getDiagnosisStatistics_state("09-28/2011", "487.00", "27606");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("Enter dates in MM/dd/yyyy", e.getErrorList().get(0));
+		}
+	}
+
+	public void testGetDiagnosisStatisticsCountryInvalidDate() throws Exception {
+		try {
+			action.getDiagnosisStatistics_country("09-28/2011", "487.00", "27606");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("Enter dates in MM/dd/yyyy", e.getErrorList().get(0));
+		}
+	}
 	
 	public void testGetDiagnosisStatisticsReversedDates() throws Exception {
 		try {
@@ -96,10 +140,70 @@ public class ViewDiagnosisStatisticsActionTest extends TestCase {
 			assertEquals("Zip Code must be 5 digits or 5 digits and the 4 digit extension!", e.getErrorList().get(0));
 		}
 	}
+
+	public void testGetDiagnosisStatisticsRegionInvalidZip() throws Exception {
+		try {
+			action.getDiagnosisStatistics_region("09/28/2011", "487.00", "2766");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("Zip Code must be 5 digits or 5 digits and the 4 digit extension!", e.getErrorList().get(0));
+		}
+	}
+
+	public void testGetDiagnosisStatisticsStateInvalidZip() throws Exception {
+		try {
+			action.getDiagnosisStatistics_state("09/28/2011", "487.00", "2766");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("Zip Code must be 5 digits or 5 digits and the 4 digit extension!", e.getErrorList().get(0));
+		}
+	}
+
+	public void testGetDiagnosisStatisticsCountryInvalidZip() throws Exception {
+		try {
+			action.getDiagnosisStatistics_country("09/28/2011", "487.00", "2766");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("Zip Code must be 5 digits or 5 digits and the 4 digit extension!", e.getErrorList().get(0));
+		}
+	}
 	
 	public void testGetDiagnosisStatisticsInvalidICDCode() throws Exception {
 		try {
 			action.getDiagnosisStatistics("06/28/2011", "09/28/2011", "11114.00", "27606");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("ICDCode must be valid diagnosis!", e.getErrorList().get(0));
+		}
+	}
+
+	public void testGetDiagnosisStatisticsRegionInvalidICDCode() throws Exception {
+		try {
+			action.getDiagnosisStatistics_region("09/28/2011", "11114.00", "27606");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("ICDCode must be valid diagnosis!", e.getErrorList().get(0));
+		}
+	}
+
+	public void testGetDiagnosisStatisticsStateInvalidICDCode() throws Exception {
+		try {
+			action.getDiagnosisStatistics_state("09/28/2011", "11114.00", "27606");
+			fail("Should have failed but didn't");
+		} catch (FormValidationException e) {
+			assertEquals(1, e.getErrorList().size());
+			assertEquals("ICDCode must be valid diagnosis!", e.getErrorList().get(0));
+		}
+	}
+
+	public void testGetDiagnosisStatisticsCountryInvalidICDCode() throws Exception {
+		try {
+			action.getDiagnosisStatistics_country("09/28/2011", "11114.00", "27606");
 			fail("Should have failed but didn't");
 		} catch (FormValidationException e) {
 			assertEquals(1, e.getErrorList().size());
