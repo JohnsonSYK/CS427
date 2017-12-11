@@ -198,6 +198,7 @@
             healthRecord.setWeight(Double.parseDouble(height));
         if (!weight.equals(""))
             healthRecord.setHeight(Double.parseDouble(weight));
+
         if (smoker == null) smoker = "off";
         healthRecord.setSmoker(smoker.compareTo("off"));
     }
