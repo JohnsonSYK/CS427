@@ -51,8 +51,6 @@ public class ViewPrescriptionStatisticsActionTest extends TestCase {
         }
         List <OfficeVisitBean> ovbl = action.getFilteredOfficeVisits("250.10", "Male", left, right);
         assertEquals(2, ovbl.size());
-        System.out.println(ovbl.get(0).getID());
-        System.out.println(ovbl.get(1).getID());
     }
 
     /**
