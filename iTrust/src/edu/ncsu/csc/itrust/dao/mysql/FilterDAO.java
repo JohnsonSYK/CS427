@@ -38,7 +38,7 @@ public class FilterDAO {
     }
 
     /**
-     * Adds an visit and return its ID
+     * Adds an filter to the database
      *
      * @param f The FilterBean to be added.
      * @return A long indicating the unique ID for the office visit.
@@ -62,6 +62,12 @@ public class FilterDAO {
         }
     }
 
+    /**
+     * Set up the prepared statement to store a filter bean into the database.
+     * @param ps the prepared statement
+     * @param f the filter bean object
+     * @throws SQLException
+     */
     private void setValues1(PreparedStatement ps, FilterBean f) throws SQLException {
         ps.setLong(1, f.getMid());
         ps.setString(2, f.getSender());
@@ -83,7 +89,7 @@ public class FilterDAO {
     }
 
     /**
-     * Updates the information in a particular office visit.
+     * Updates the information in a particular filter.
      *
      * @param f The Filter bean representing the changes.
      * @throws DBException
@@ -106,6 +112,12 @@ public class FilterDAO {
         }
     }
 
+    /**
+     * Set up the prepared statement (in another order) to store a filter bean into the database.
+     * @param ps the prepared statement
+     * @param f the filter bean object
+     * @throws SQLException
+     */
     private void setValues2(PreparedStatement ps, FilterBean f) throws SQLException {
         ps.setLong(7, f.getMid());
         ps.setString(1, f.getSender());
@@ -127,10 +139,10 @@ public class FilterDAO {
     }
 
     /**
-     * Returns a particular office visit given an ID
+     * Returns a particular filter bean given an ID
      *
      * @param mid The unique ID logged in user.
-     * @return An OfficeVisitBean with the specifics for that office visit.
+     * @return A FilterBean with the specifics for the mid.
      * @throws DBException
      */
     public FilterBean getFilter(long mid) throws DBException {

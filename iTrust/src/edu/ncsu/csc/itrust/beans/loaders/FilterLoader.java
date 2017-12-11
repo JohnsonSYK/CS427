@@ -12,7 +12,7 @@ import java.util.logging.Filter;
 import edu.ncsu.csc.itrust.beans.FilterBean;
 
 /**
- * A loader for OfficeVisitBeans.
+ * A loader for FilterBeans.
  *
  * Loads in information to/from beans using ResultSets and PreparedStatements. Use the superclass to enforce consistency.
  * For details on the paradigm for a loader (and what its methods do), see {@link BeanLoader}
