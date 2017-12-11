@@ -33,6 +33,9 @@
     String password = request.getParameter("p_password");
     String pwVerify = request.getParameter("p_verify");
 
+    String height = request.getParameter("p_height");
+    String weight = request.getParameter("p_weight");
+
     if (firstName != null && lastName != null && email != null && password != null && pwVerify != null) {
         try {
             ErrorList errorList = new ErrorList();
@@ -49,15 +52,19 @@
 
             // if successful form validation, check the for pre-existing email and matching password inputs
             // and throw exceptions for errors
-            addErrors(prodDAO, email, password, pwVerify, errorList);
+            addErrors(prodDAO, email, password, pwVerify, height, weight, errorList);
+
+            HealthRecord healthRecord = new HealthRecord();
+            setHealthInfo(request, healthRecord);
 
             // all validations passed, assign new patient an MID
             long patientMID = prodDAO.getPatientDAO().addEmptyPatient();
             patientBean.setMID(patientMID);
             patientBean.setPreRegister(true);
-
+            healthRecord.setPatientID(patientMID);
 
             prodDAO.getPatientDAO().editPatient(patientBean, -1);
+            prodDAO.getHealthRecordsDAO().add(healthRecord);
             prodDAO.getAuthDAO().addUser(patientMID, Role.PATIENT, password);
 
             loggingAction.logEvent(TransactionType.PATIENT_PREREGISTER, patientMID, 0, "");
@@ -104,6 +111,8 @@
     <input type="text" id="p_phone" name="p_phone" style="width: 97%;"><br />
 
     <h3>Insurance Provider</h3>
+    Name<br />
+    <input type="text" id="p_icName" name="p_icName" style="width: 97%;"><br />
     Address 1<br />
     <input type="text" id="p_icAddress1" name="p_icAddress1" style="width: 97%;"><br />
     Address 2<br />
@@ -145,6 +154,7 @@
     }
 
     private void setEmergencyContactInfo(HttpServletRequest request, PatientBean patientBean) {
+        String icName = request.getParameter("p_icName");
         String icAddr1 = request.getParameter("p_icAddress1");
         String icAddr2 = request.getParameter("p_icAddress2");
         String icCity = request.getParameter("p_icCity");
@@ -152,6 +162,7 @@
         String icZipcode = request.getParameter("p_icZipcode");
         String icPhone = request.getParameter("p_icPhone");
 
+        patientBean.setIcName(icName);
         patientBean.setIcAddress1(icAddr1);
         patientBean.setIcAddress2(icAddr2);
         patientBean.setIcCity(icCity);
@@ -178,7 +189,20 @@
         patientBean.setPhone(phone);
     }
 
-    private void addErrors(DAOFactory prodDAO, String email, String password, String pwVerify, ErrorList errorList) throws DBException, FormValidationException {
+    private void setHealthInfo(HttpServletRequest request, HealthRecord healthRecord) {
+        String height = request.getParameter("p_height");
+        String weight = request.getParameter("p_weight");
+        String smoker = request.getParameter("p_smoker");
+
+        if (!height.equals(""))
+            healthRecord.setWeight(Double.parseDouble(height));
+        if (!weight.equals(""))
+            healthRecord.setHeight(Double.parseDouble(weight));
+        if (smoker == null) smoker = "off";
+        healthRecord.setSmoker(smoker.compareTo("off"));
+    }
+
+    private void addErrors(DAOFactory prodDAO, String email, String password, String pwVerify, String height, String weight, ErrorList errorList) throws DBException, FormValidationException {
         if (!prodDAO.getPatientDAO().validPatientEmail(email)) {
             errorList.addIfNotNull(email + " is already being used by another patient");
         }
@@ -188,6 +212,21 @@
         if (!password.equals(pwVerify)) {
             errorList.addIfNotNull("Password and verification don't match");
         }
+        if (!height.equals("")) {
+            try {
+                Double.parseDouble(height);
+            } catch (Exception e) {
+                errorList.addIfNotNull("Height needs to be numeric");
+            }
+        }
+        if (!weight.equals("")) {
+            try {
+                Double.parseDouble(weight);
+            } catch (Exception e) {
+                errorList.addIfNotNull("Weight needs to be numeric");
+            }
+        }
+
         if (errorList.getMessageList().size() > 0) {
             throw new FormValidationException(errorList);
         }

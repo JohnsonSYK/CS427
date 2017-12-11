@@ -65,7 +65,11 @@ public class HealthRecordsBeanLoader implements BeanLoader<HealthRecord> {
 		hr.setOfficeVisitID(rs.getLong("OfficeVisitID"));
 		hr.setPersonnelID(rs.getLong("HCPID"));
 		hr.setPatientID(rs.getLong("PatientID"));
-		hr.setOfficeVisitDateStr(new SimpleDateFormat("MM/dd/yyyy").format(new Date(rs.getDate("OfficeVisitDate").getTime())));
+		try {
+            hr.setOfficeVisitDateStr(new SimpleDateFormat("MM/dd/yyyy").format(new Date(rs.getDate("OfficeVisitDate").getTime())));
+        } catch (Exception e){
+            hr.setOfficeVisitDateStr("");
+        }
 		hr.setBodyMassIndex();
 		return hr;
 	}

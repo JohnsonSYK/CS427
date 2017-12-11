@@ -49,6 +49,7 @@ public class HealthRecordsDAO {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<HealthRecord> records = null;
+		System.out.println(mid);
 		try {
 			conn = factory.getConnection();
 			ps = conn.prepareStatement("SELECT * FROM personalhealthinformation "
@@ -59,7 +60,7 @@ public class HealthRecordsDAO {
 			records = loader.loadList(rs);
 			rs.close();
 		} catch (SQLException e) {
-			
+			System.out.println(e.getMessage());
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
