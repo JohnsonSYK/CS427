@@ -59,7 +59,6 @@ public class HealthRecordsDAO {
 			records = loader.loadList(rs);
 			rs.close();
 		} catch (SQLException e) {
-			
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);
