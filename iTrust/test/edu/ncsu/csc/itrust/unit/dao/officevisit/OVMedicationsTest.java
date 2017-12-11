@@ -21,6 +21,9 @@ public class OVMedicationsTest extends TestCase {
 	private PrescriptionBean pres;
 	private OverrideReasonBean override;
 
+	/**
+	 * Sets up defaults
+	 */
 	@Override
 	protected void setUp() throws Exception {
 		TestDataGenerator gen = new TestDataGenerator();
@@ -113,6 +116,18 @@ public class OVMedicationsTest extends TestCase {
 		assertEquals("no current prescriptions on office vist 1", 0, dao.getList(1).size());
 		dao.remove(50L);
 		assertEquals("no current prescriptions on office vist 1", 0, dao.getList(1).size());
+	}
+
+	/**
+	 * testtestGetByPrescriptionID
+	 * @throws Exception
+	 */
+	public void testGetByPrescriptionID() throws Exception {
+		long ovMedID = dao.add(pres);
+		assertNotNull("now there is a prescription", dao.getByID(ovMedID));
+		assertEquals(pres, dao.getByID(ovMedID));
+		dao.remove(ovMedID);
+		assertEquals("now there's none", null, dao.getByID(ovMedID));
 	}
 
 }

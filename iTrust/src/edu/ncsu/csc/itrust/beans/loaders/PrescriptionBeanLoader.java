@@ -22,7 +22,7 @@ public class PrescriptionBeanLoader implements BeanLoader<PrescriptionBean> {
 	}
 
 	public List<PrescriptionBean> loadList(ResultSet rs) throws SQLException {
-		ArrayList<PrescriptionBean> list = new ArrayList<PrescriptionBean>();
+		ArrayList<PrescriptionBean> list = new ArrayList<>();
 		while (rs.next()) {
 			list.add(loadSingle(rs));
 		}

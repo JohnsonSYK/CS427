@@ -42,7 +42,7 @@ public class PrescriptionsDAO {
 		PreparedStatement ps = null;
 		try {
 			conn = factory.getConnection();
-			ps = conn.prepareStatement("Select * From ovmedication,ndcodes Where ovmedication.VisitID = ? "
+			ps = conn.prepareStatement("SELECT * FROM ovmedication,ndcodes WHERE ovmedication.VisitID = ? "
 					+ "AND ndcodes.Code=ovmedication.NDCode");
 			ps.setLong(1, visitID);
 			ResultSet rs = ps.executeQuery();
@@ -128,6 +128,33 @@ public class PrescriptionsDAO {
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, ps);
+		}
+	}
+
+	/**
+	 * Get the prescription information based on known medication id
+	 * @param id The unique ID of medication to be found
+	 * @return the prescription bean
+	 * @throws DBException
+	 */
+	public PrescriptionBean getByID(long id) throws DBException{
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = factory.getConnection();
+			ps = conn.prepareStatement("SELECT * FROM ovmedication,ndcodes WHERE ovmedication.ID = ? "
+				+ "AND ndcodes.Code=ovmedication.NDCode;");
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
+			PrescriptionBean prescription = (rs.next()) ? loader.loadSingle(rs) : null;
+			rs.close();
+			ps.close();
+			return prescription;
+
+		} catch (SQLException e) {
 			throw new DBException(e);
 		} finally {
 			DBUtil.closeConnection(conn, ps);

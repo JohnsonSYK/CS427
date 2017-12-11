@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.google.common.primitives.Longs;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -130,4 +132,11 @@ public class OfficeVisitBean {
 		this.isERIncident = isERIncident;
 	}
 
+	@Override
+	public int hashCode() {return Longs.hashCode(visitID);}
+
+	@Override
+	public boolean equals(Object ovb) {
+		return (ovb instanceof OfficeVisitBean && (((OfficeVisitBean)ovb).visitID == this.visitID));
+	}
 }

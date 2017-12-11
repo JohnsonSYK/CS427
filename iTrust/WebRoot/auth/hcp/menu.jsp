@@ -5,6 +5,7 @@
 	<div class="panel-body" id="info-menu">
 		<ul class="nav nav-sidebar">
 		    <li><a href="/iTrust/auth/hcp-uap/viewPatientOfficeVisitHistory.jsp">All Patients</a>
+			<li><a href="/iTrust/auth/hcp-uap/viewPreRegisteredPatients.jsp">Pre-Registered Patients</a></li>
 			<li><a href="/iTrust/auth/hcp-uap/viewBasicHealth.jsp">Basic Health Information</a>
 			<li><a href="/iTrust/auth/hcp-uap/editPatient.jsp">Patient Information</a>
 			<li><a href="/iTrust/auth/hcp-uap/editPHR.jsp">PHR Information</a>
@@ -154,7 +155,8 @@
 		    <li><a href="/iTrust/auth/staff/editPersonnel.jsp">UAPs</a>
 			<li><a href="/iTrust/auth/surveyResults.jsp">Satisfaction Survey Results</a>
 			<li><a href="/iTrust/auth/hcp/viewPrescriptionRenewalNeeds.jsp">Potential Prescription-Renewals</a>
-			<li><a href="/iTrust/auth/hcp/viewCauseDeath.jsp">View cause-of-death trends report</a>
+			<li><a href="/iTrust/auth/hcp/viewCauseDeath.jsp">View Cause-of-Death Trends Report</a>
+			<li><a href="/iTrust/auth/hcp/viewPrescriptionTrends.jsp">View Prescription Trends Report</a>
 		</ul>
 	</div>
 </div>
