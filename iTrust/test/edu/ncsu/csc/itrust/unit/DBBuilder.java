@@ -39,12 +39,12 @@ public class DBBuilder {
 	}
 
 	public void dropTables() throws FileNotFoundException, IOException, SQLException {
-		List<String> queries = SQLFileCache.getInstance().getQueries("sql/dropTables.sql");
+		List<String> queries = SQLFileCache.getInstance().getQueries("C:\\Users\\as780\\Desktop\\CS 598DM Software Testing\\iTrust\\iTrust\\sql\\dropTables.sql"); // "sql/dropTables.sql"
 		executeSQL(queries);
 	}
 
 	public void createTables() throws FileNotFoundException, IOException, SQLException {
-		List<String> queries = SQLFileCache.getInstance().getQueries("sql/createTables.sql");
+		List<String> queries = SQLFileCache.getInstance().getQueries("C:\\Users\\as780\\Desktop\\CS 598DM Software Testing\\iTrust\\iTrust\\sql\\createTables.sql");//"sql/createTables.sql"
 		executeSQL(queries);
 	}
 	
