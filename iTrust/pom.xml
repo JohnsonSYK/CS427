@@ -59,11 +59,12 @@
     </resources>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.3</version>
         <configuration>
-          <source>1.9</source>
-          <target>1.9</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>
@@ -174,6 +175,19 @@
           	</execution>
           </executions>
         </plugin>
+		<plugin>
+			<groupId>org.ekstazi</groupId>
+			<artifactId>ekstazi-maven-plugin</artifactId>
+			<version>5.2.0</version>
+			<executions>
+				<execution>
+					<id>ekstazi</id>
+					<goals>
+						<goal>select</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
     </plugins>
   </build>
   <dependencies>
@@ -390,7 +404,7 @@
 		<groupId>org.cewolf</groupId>
 	    <version>1.1</version>
 	    <scope>system</scope>
-	    <systemPath>${project.basedir}/WebRoot/WEB-INF/lib/cewolf-1.1.jar</systemPath>
+	    <systemPath>${project.basedir}/WebRoot/WEB-INF/lib/cewolf-1.1.jar</systemPath> <!-- ${project.basedir}/WebRoot/WEB-INF/lib/cewolf-1.1.jar -->
 	</dependency>
 	<dependency>
 		<groupId>com.google.code.findbugs</groupId>

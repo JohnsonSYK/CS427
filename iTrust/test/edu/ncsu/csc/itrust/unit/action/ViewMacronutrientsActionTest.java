@@ -4,6 +4,9 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import edu.ncsu.csc.itrust.action.ViewFoodEntryAction;
@@ -19,7 +22,7 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
  * Tests for viewing a patient's food diary
  *
  */
-public class ViewMacronutrientsActionTest extends TestCase {
+public class ViewMacronutrientsActionTest {
 	private ViewMacronutrientsAction msj;
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen;
@@ -28,8 +31,8 @@ public class ViewMacronutrientsActionTest extends TestCase {
 	 * Clears all of the tables, gets the standard data, 
 	 * and includes the data for use cases 68 and 69
 	 */
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -38,8 +41,8 @@ public class ViewMacronutrientsActionTest extends TestCase {
 	/**
 	 * Clears all of the tables
 	 */
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		gen.clearAllTables();
 	}
 	
@@ -52,14 +55,14 @@ public class ViewMacronutrientsActionTest extends TestCase {
 			
 	    	MacronutrientsBean msjData = msj.getMsjData(341);
 	    	
-	    	assertEquals(40, msjData.getYears());
-	    	assertEquals(112.5, msjData.getWeight(), .001);
-	    	assertEquals(65.0, msjData.getHeight(), .001);
-	    	assertEquals(1336.25, msjData.getMsj(), .001);
-	    	assertEquals(341L, msjData.getPatientID());
+	    	Assert.assertEquals(40, msjData.getYears());
+	    	Assert.assertEquals(112.5, msjData.getWeight(), .001);
+	    	Assert.assertEquals(65.0, msjData.getHeight(), .001);
+	    	Assert.assertEquals(1336.25, msjData.getMsj(), .001);
+	    	Assert.assertEquals(341L, msjData.getPatientID());
 			
 		} catch (ITrustException e) {
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 			
 	}
@@ -72,12 +75,12 @@ public class ViewMacronutrientsActionTest extends TestCase {
 			
 			msjData = msj.getMsjData(343);
 	    	
-	    	fail("You do not have permission");
+	    	Assert.fail("You do not have permission");
 			
 		} catch (ITrustException e) {
-			assertEquals("You do not have permission"
+			Assert.assertEquals("You do not have permission"
 					+ " to view Macronutrients data!", e.getMessage());
-			assertNull(msjData);
+			Assert.assertNull(msjData);
 		}
 		
 			
@@ -91,12 +94,12 @@ public class ViewMacronutrientsActionTest extends TestCase {
 			
 			msjData = msj.getMsjData(336);
 	    	
-	    	fail("Patient does not have complete information");
+	    	Assert.fail("Patient does not have complete information");
 			
 		} catch (ITrustException e) {
-			assertEquals("Patient does not have complete information to calculate"
+			Assert.assertEquals("Patient does not have complete information to calculate"
 					+ " Macronutrients.", e.getMessage());
-			assertNull(msjData);
+			Assert.assertNull(msjData);
 		}
 		
 			
@@ -111,11 +114,11 @@ public class ViewMacronutrientsActionTest extends TestCase {
 			
 	    	MacronutrientsBean msjData = msj.getMsjData(342);
 	    	
-	    	assertEquals(60, msjData.getYears());
-	    	assertEquals(112.5, msjData.getWeight(), .001);
-	    	assertEquals(65.0, msjData.getHeight(), .001);
-	    	assertEquals(1236.25, msjData.getMsj(), .001);
-	    	assertEquals(342L, msjData.getPatientID());
+	    	Assert.assertEquals(60, msjData.getYears());
+	    	Assert.assertEquals(112.5, msjData.getWeight(), .001);
+	    	Assert.assertEquals(65.0, msjData.getHeight(), .001);
+	    	Assert.assertEquals(1236.25, msjData.getMsj(), .001);
+	    	Assert.assertEquals(342L, msjData.getPatientID());
 	    	
 	    	List<FoodEntryBean> foodentry = action.getDiaryTotals(342);
 	    	
@@ -123,11 +126,11 @@ public class ViewMacronutrientsActionTest extends TestCase {
 	    	
 	    	FoodEntryBean single = foodentry.get(0);
 	    	
-	    	assertEquals(5, foodentry.size());
-	    	assertEquals(728.0, single.getCarbGrams() * single.getServings() * 4, .001);
+	    	Assert.assertEquals(5, foodentry.size());
+	    	Assert.assertEquals(728.0, single.getCarbGrams() * single.getServings() * 4, .001);
 			
 		} catch (ITrustException e) {
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 			
 	}
