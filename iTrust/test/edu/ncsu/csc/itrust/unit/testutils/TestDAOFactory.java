@@ -41,7 +41,7 @@ public class TestDAOFactory extends DAOFactory implements IConnectionDriver {
 
 	private TestDAOFactory() {
 		try {//"WebRoot/META-INF/context.xml"
-			Document document = parseXML(new BufferedReader(new FileReader("C:\\Users\\as780\\Desktop\\CS 598DM Software Testing\\iTrust\\iTrust\\WebRoot\\META-INF\\context.xml")));
+			Document document = parseXML(new BufferedReader(new FileReader("WebRoot/META-INF/context.xml")));
 			dataSource = new BasicDataSource();
 			dataSource.setDriverClassName(getAttribute(document, "@driverClassName"));
 			dataSource.setUsername(getAttribute(document, "@username"));

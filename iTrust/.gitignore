@@ -7,3 +7,6 @@
 /.metadata/*
 /.settings/*
 /WebRoot/META-INF/context.xml
+/.idea
+/.starts
+/.ekstazi

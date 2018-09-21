@@ -41,7 +41,7 @@ public class TestDataGenerator {
 
 	}
 
-	private String DIR = "C:\\Users\\as780\\Desktop\\CS 598DM Software Testing\\iTrust\\iTrust\\sql\\data"; //sql/data
+	private String DIR = "sql/data"; //sql/data
 
 	private DAOFactory factory;
 
